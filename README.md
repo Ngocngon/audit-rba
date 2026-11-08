@@ -2,7 +2,7 @@
 
 App soát ảnh hiện trường EHS theo RBA Guider 8.0.1: AI khoanh vùng và viết lỗi, người đánh giá xác nhận, xuất file Findings mẫu SEV/T, ảnh báo cáo song ngữ, PDF trình chiếu. Có lưu dữ liệu online theo phân vùng, đăng nhập và phân quyền 3 cấp.
 
-- **Link dùng app (24/24):** https://ngocngon.github.io/audit-rba/
+- **Link dùng app (24/24):** https://audit-rba.pages.dev (link dự phòng: https://ngocngon.github.io/audit-rba/)
 - **Máy chủ API (Cloudflare Workers + D1):** `https://audit-rba-api.likiop00.workers.dev`
 
 ## Cấu trúc
