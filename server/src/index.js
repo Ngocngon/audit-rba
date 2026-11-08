@@ -4,7 +4,17 @@
 const ROLES = ['admin', 'auditor', 'viewer'];
 const PBKDF2_ITER = 100000;
 const SESSION_DAYS_DEFAULT = 30;
-const MAX_IMG = 8 * 1024 * 1024;
+const MAX_IMG = 8 * 1024 * 1024, MAX_IMG_D1 = 1900000;
+// Ảnh lưu ở R2 nếu có binding IMG, nếu không thì lưu thẳng trong D1 (bảng imgs, tối đa ~1,9 MB/ảnh)
+const imgPut = (env, aid, pid, buf, ct) => env.IMG
+  ? env.IMG.put(`${aid}/${pid}.jpg`, buf, { httpMetadata: { contentType: ct } })
+  : env.DB.prepare('INSERT OR REPLACE INTO imgs(audit_id,id,ct,data) VALUES(?,?,?,?)').bind(aid, pid, ct, buf).run();
+async function imgGet(env, aid, pid) {
+  if (env.IMG) { const o = await env.IMG.get(`${aid}/${pid}.jpg`); return o && { body: o.body, ct: o.httpMetadata?.contentType }; }
+  const r = await env.DB.prepare('SELECT ct, data FROM imgs WHERE audit_id=? AND id=?').bind(aid, pid).first();
+  return r && { body: r.data instanceof ArrayBuffer ? r.data : new Uint8Array(r.data), ct: r.ct };
+}
+const imgDel = (env, aid, pid) => env.IMG ? env.IMG.delete(`${aid}/${pid}.jpg`) : env.DB.prepare('DELETE FROM imgs WHERE audit_id=? AND id=?').bind(aid, pid).run();
 const MAX_DATA = 900 * 1024;
 const KV_KEYS = { lessons: 'auditor', guider: 'admin', guiderfile: 'admin', sys: 'admin' };
 
@@ -412,8 +422,8 @@ on('PUT', '/api/audits/:id/photos/:pid/img', async (req, env, u, p) => {
   if (!okId(p.pid)) fail(400, 'Mã ảnh không hợp lệ.');
   const buf = await req.arrayBuffer();
   if (!buf.byteLength) fail(400, 'Ảnh rỗng.');
-  if (buf.byteLength > MAX_IMG) fail(413, 'Ảnh quá lớn.');
-  await env.IMG.put(`${a.id}/${p.pid}.jpg`, buf, { httpMetadata: { contentType: req.headers.get('Content-Type') || 'image/jpeg' } });
+  if (buf.byteLength > (env.IMG ? MAX_IMG : MAX_IMG_D1)) fail(413, 'Ảnh quá lớn.');
+  await imgPut(env, a.id, p.pid, buf, req.headers.get('Content-Type') || 'image/jpeg');
   const t = now();
   await run(env, `INSERT INTO photos(id,audit_id,img_size,srv,updated_by) VALUES(?,?,?,?,?)
     ON CONFLICT(audit_id,id) DO UPDATE SET img_size=excluded.img_size, srv=excluded.srv`, p.pid, a.id, buf.byteLength, t, u.id);
@@ -423,9 +433,9 @@ on('PUT', '/api/audits/:id/photos/:pid/img', async (req, env, u, p) => {
 on('GET', '/api/audits/:id/photos/:pid/img', async (req, env, u, p) => {
   await auditOf(env, p.id);
   if (!okId(p.pid)) fail(400, 'Mã ảnh không hợp lệ.');
-  const o = await env.IMG.get(`${p.id}/${p.pid}.jpg`);
+  const o = await imgGet(env, p.id, p.pid);
   if (!o) fail(404, 'Chưa có ảnh trên hệ thống.');
-  return new Response(o.body, { headers: { 'Content-Type': o.httpMetadata?.contentType || 'image/jpeg', 'Cache-Control': 'private, max-age=86400' } });
+  return new Response(o.body, { headers: { 'Content-Type': o.ct || 'image/jpeg', 'Cache-Control': 'private, max-age=86400' } });
 }, true);
 
 on('DELETE', '/api/audits/:id/photos/:pid', async (req, env, u, p) => {
@@ -433,7 +443,7 @@ on('DELETE', '/api/audits/:id/photos/:pid', async (req, env, u, p) => {
   await mustEdit(env, u, a);
   const t = now();
   await run(env, 'UPDATE photos SET deleted=1, srv=?, upd=?, updated_by=? WHERE audit_id=? AND id=?', t, t, u.id, a.id, p.pid);
-  await env.IMG.delete(`${a.id}/${p.pid}.jpg`).catch(() => {});
+  await imgDel(env, a.id, p.pid).catch(() => {});
   await run(env, 'UPDATE photos SET img_size=0 WHERE audit_id=? AND id=?', a.id, p.pid);
   return json({ ok: true });
 }, true);

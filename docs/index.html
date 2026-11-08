@@ -12,7 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Audit RBA">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Audit RBA v1.2</title>
+<title>Audit RBA v1.3</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
 <style>
 /* Bàn soát ảnh EHS: ảnh hiện trường trên nền tối, biển báo an toàn làm ngôn ngữ thị giác (số hiệu bát giác / thoi / tròn theo mức độ).
@@ -590,13 +590,94 @@ details.hintd>summary::-webkit-details-marker{display:none}
   #toast{bottom:calc(74px + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:380px){.chip small{display:none}.ask .act{grid-template-columns:1fr}}
+/* ---------- Online: đăng nhập, kho audit, quản trị ---------- */
+.clu{position:relative;flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--accent-soft);color:var(--accent);font:700 13px/1 var(--fb);display:grid;place-items:center;cursor:pointer;padding:0}
+.clu i{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;border:2px solid var(--panel);background:var(--muted)}
+.clu i[data-st="ok"]{background:var(--ok)}.clu i[data-st="sync"]{background:var(--accent);animation:tickp 1s ease-in-out infinite}.clu i[data-st="wait"]{background:var(--maj)}.clu i[data-st="err"]{background:var(--pri)}.clu i[data-st="ro"]{background:var(--min)}
+#askT{white-space:pre-line}
+.clro{display:flex;gap:10px;align-items:center;padding:8px 14px;background:#FFF4D6;color:#5A4300;border-bottom:1px solid #EBD9A4;font-size:13.5px}
+:root[data-theme="dark"] .clro{background:#3A3115;color:#F5DE9A;border-color:#5A4B1E}
+.clro span{flex:1}
+html[data-ro="1"] .adds,html[data-ro="1"] .addmore{display:none}
+.clgate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:linear-gradient(160deg,var(--paper),var(--accent-soft))}
+.clgate[hidden]{display:none}
+html.clgate body{overflow:hidden}
+.clgate form{width:min(400px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 24px;display:grid;gap:12px;box-shadow:0 18px 50px rgba(0,0,0,.12)}
+.clgate .cllogo{display:flex;gap:12px;align-items:center}
+.clgate .cllogo img{width:46px;height:46px;border-radius:10px}
+.clgate h1{margin:0;font:700 26px/1.1 var(--fd);letter-spacing:.02em;text-transform:uppercase}
+.clgate label{display:grid;gap:4px;font-size:13.5px;font-weight:600}
+.clgate input{font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.clgate .msg{min-height:1.2em;color:var(--pri);font-size:13.5px;margin:0}
+.clgate .btn{min-height:46px;font-size:15px}
+.cpage{display:none}
+@media (min-width:921px){
+  #app[data-dview="cloud"] .work,#app[data-dview="admin"] .work{display:none}
+  #app[data-dview="cloud"] #cloudPage,#app[data-dview="admin"] #adminPage{display:block;overflow:auto;background:var(--paper);grid-column:2;grid-row:4;min-height:0}
+}
+@media (max-width:920px){
+  #app[data-view="cloud"] .work,#app[data-view="admin"] .work{display:none}
+  #app[data-view="cloud"] #cloudPage,#app[data-view="admin"] #adminPage{display:block;flex:1;overflow:auto;background:var(--paper)}
+  .tabbar{grid-template-columns:repeat(5,1fr)!important}
+  .clkt{flex-wrap:wrap}.clkt input[type=search]{flex:1 1 100%}
+  .cla{grid-template-columns:1fr!important}
+  .clstats{grid-template-columns:repeat(2,1fr)!important}
+}
+.dnav>button[data-dv="cloud"],.tabbar button[data-v="cloud"],#cloudPage{--ac:#0369A1;--acs:#E0F2FE}
+.dnav>button[data-dv="admin"],#adminPage{--ac:#B91C1C;--acs:#FEE2E2}
+:root[data-theme="dark"] .dnav>button[data-dv="cloud"],:root[data-theme="dark"] .tabbar button[data-v="cloud"],:root[data-theme="dark"] #cloudPage{--ac:#7DD3FC;--acs:#0C3550}
+:root[data-theme="dark"] .dnav>button[data-dv="admin"],:root[data-theme="dark"] #adminPage{--ac:#FCA5A5;--acs:#4A1717}
+html:not([data-role="admin"]) .cl-admin{display:none!important}
+.clkt{display:flex;gap:8px;align-items:center;margin:8px 0}
+.clkt input[type=search]{flex:1;min-width:200px}
+.clkt label.chk{display:flex;gap:6px;align-items:center;font-size:13.5px;white-space:nowrap}
+.clkt label.chk input{width:18px!important;height:18px!important;min-width:0!important;flex:none!important;padding:0!important;margin:0;accent-color:var(--brand,#00558f)}
+.clv{border:1px solid var(--line);border-radius:12px;background:var(--panel);margin:10px 0;overflow:hidden}
+.clv.on{border-color:var(--ac)}
+.clvh{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:2px 10px;width:100%;text-align:left;border:0;background:none;padding:12px 16px;cursor:pointer;color:var(--ink)}
+.clvh b{font-size:16px}.clvh small{color:var(--muted);font-size:12.5px;grid-row:2}.clvh .chev{grid-row:1/3;grid-column:2;align-self:center;font-style:normal;color:var(--muted)}
+.clv.on .clvh{background:var(--acs)}
+.clal{display:grid}
+.cla{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 16px;border-top:1px solid var(--line)}
+.cla.here{background:var(--accent-soft)}
+.clam{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.clam small{flex-basis:100%;color:var(--muted);font-size:12.5px}
+.claa{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.clareas{padding:4px 16px 14px;display:grid;gap:12px;border-top:1px dashed var(--line)}
+.clar h4{margin:8px 0 6px;font-size:14px}.clar h4 small{color:var(--muted);font-weight:400}
+.clpad{padding:8px 16px}
+.clgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.clph{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:5px;cursor:pointer;color:var(--ink);min-width:0}
+.clph:hover{border-color:var(--ac)}
+.clph img,.clph .noimg{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:5px;background:var(--soft);display:block}
+.clph b{font-size:13px}.clph small{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.clph .clf{color:var(--ink)}
+.clph .pill{font-size:10px;padding:1px 5px;font-style:normal}
+.clres{margin:10px 0}
+.clstats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px}
+.clstats .dcard{padding:12px 14px;display:grid;gap:2px}
+.clstats b{font:700 26px/1.1 var(--fd)}.clstats small{color:var(--muted);font-size:12.5px}
+#adminB .stabs{margin-bottom:12px}
+.cltab td{vertical-align:middle}
+.cltab tr.off td{opacity:.6}
+.cltab select{font:inherit;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
+.clact{white-space:nowrap}.clact .btn{margin:2px}
+.clroles{margin-top:14px}
+.clmem{display:grid;gap:6px;max-height:300px;overflow:auto;padding:6px 0}
+.clmem label{display:flex;gap:8px;align-items:center;font-size:14px}.clmem input{width:auto}
+.cladm{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+#dlgClUser form,#dlgClPw form{display:grid;gap:10px}
+#dlgClUser label,#dlgClPw label{display:grid;gap:4px;font-size:13.5px;font-weight:600}
+#dlgClUser input,#dlgClUser select,#dlgClPw input{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.clmsg{color:var(--pri);font-size:13.5px;min-height:1em;margin:0}
+.clpwr{display:flex;gap:6px}.clpwr input{flex:1}
 </style>
 </head>
 <body>
 
 <div id="app" data-view="review">
   <header class="top">
-    <img class="applogo" src="icon-192.png" alt="" width="34" height="34"><div class="brand"><b>Audit RBA<small class="ver">v1.2</small></b><span id="brandSub">RBA Guider 8.0.1 · pháp lý chốt 01/11/2026</span></div>
+    <img class="applogo" src="icon-192.png" alt="" width="34" height="34"><div class="brand"><b>Audit RBA<small class="ver">v1.3</small></b><span id="brandSub">RBA Guider 8.0.1 · pháp lý chốt 01/11/2026</span></div>
     <button class="chip empty" id="chip" title="Thông tin audit, báo cáo và dữ liệu"><b id="chipU">Nhập thông tin audit</b><small id="chipD"></small></button>
     <span class="net" id="net" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 8.5a15 15 0 0120 0M5.5 12a10 10 0 0113 0M9 15.5a5 5 0 016 0"/><path d="M3 3l18 18"/></svg>Mất mạng</span>
     <span class="spacer"></span>
@@ -604,16 +685,20 @@ details.hintd>summary::-webkit-details-marker{display:none}
       <button class="btn primary" id="btnFind" title="Điền vào mẫu Findings .xlsm, tải về dạng .zip">Xuất file Findings</button>
       <button class="btn" id="btnHub"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg>Báo cáo &amp; dữ liệu</button>
     </div>
+    <button class="clu clonly" id="clUser" hidden aria-label="Tài khoản"><span id="clIni">?</span><i id="clDot" data-st="off"></i></button>
     <button class="icon hbtn" id="btnUI" title="Đổi giao diện máy tính / điện thoại" aria-label="Đổi giao diện máy tính / điện thoại"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
     <button class="icon hbtn" id="btnSet" title="Cài đặt hệ thống" aria-label="Cài đặt hệ thống"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></button>
   </header>
   <div class="hazard"></div>
   <div class="banner" id="queueBar" hidden><span id="queueMsg"></span><button class="btn primary sm" id="queueGo" hidden>Soát ngay</button><button class="icon" id="queueX" aria-label="Ẩn thông báo">×</button></div>
+<div class="clro" id="clRo" hidden><span id="clRoMsg"></span><button class="btn sm" id="clRoGo">Kho audit</button></div>
 <nav class="dnav" id="dnav" aria-label="Màn hình chính">
     <button data-dv="dash" title="Tổng quan"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Tổng quan</span><i class="cnt" id="dn_dash"></i></button>
     <button data-dv="review" title="Kiểm tra vi phạm"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg><span>Kiểm tra vi phạm</span><i class="cnt" id="dn_review"></i></button>
     <button data-dv="table" title="Xác nhận lỗi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 9v11"/></svg><span>Xác nhận lỗi</span><i class="cnt" id="dn_table"></i></button>
     <button data-dv="report" title="Báo cáo & xuất file"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg><span>Báo cáo & xuất file</span><i class="cnt" id="dn_report"></i></button>
+    <button data-dv="cloud" class="clonly" title="Kho audit online"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span>Kho audit online</span><i class="cnt" id="dn_cloud"></i></button>
+    <button data-dv="admin" class="cl-admin" hidden title="Quản trị"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span>Quản trị</span><i class="cnt" id="dn_admin"></i></button>
     <button data-dv="set" title="Cài đặt hệ thống"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg><span>Cài đặt hệ thống</span><i class="cnt" id="dn_set"></i></button>
     <div class="dnsteps" id="dnSteps" aria-label="Tiến trình audit"></div>
   </nav>
@@ -689,6 +774,7 @@ details.hintd>summary::-webkit-details-marker{display:none}
           <label>Vendor Name (Code)<input id="mUnit" placeholder="Tên đối tác (mã)" list="vendList" autocomplete="off"><datalist id="vendList"></datalist></label>
           <label>Auditor<input id="mWho" placeholder="Họ tên, cách nhau bởi dấu phẩy"></label>
           <button class="btn wide" id="btnNewAudit">Bắt đầu audit mới</button>
+          <button class="btn wide clonly" id="btnKho">Kho audit online: mở audit cũ, tra cứu</button>
         </details>
         <details class="box" open>
           <summary><h3>Xuất báo cáo</h3></summary>
@@ -761,8 +847,10 @@ details.hintd>summary::-webkit-details-marker{display:none}
   </div></section>
   <section class="spage" id="settings" aria-label="Cài đặt hệ thống"><div class="dwrap">
     <div class="dhead"><h2>Cài đặt hệ thống</h2><small id="setVer"></small></div>
-    <div class="stabs" id="setTabs" role="tablist" aria-label="Mục cài đặt"><button data-st="ui" role="tab">Giao diện</button><button data-st="ai" role="tab">AI soát ảnh</button><button data-st="crit" role="tab">Tiêu chí &amp; thời hạn</button><button data-st="ref" role="tab">Dữ liệu tham chiếu</button><button data-st="data" role="tab">Dữ liệu &amp; phiên bản</button></div>
+    <div class="stabs" id="setTabs" role="tablist" aria-label="Mục cài đặt"><button data-st="acct" role="tab" class="clonly">Tài khoản</button><button data-st="ui" role="tab">Giao diện</button><button data-st="ai" role="tab">AI soát ảnh</button><button data-st="crit" role="tab">Tiêu chí &amp; thời hạn</button><button data-st="ref" role="tab">Dữ liệu tham chiếu</button><button data-st="data" role="tab">Dữ liệu &amp; phiên bản</button></div>
     <div class="sgrid">
+      <div class="dcard clonly" data-st="acct" id="setAcct"></div>
+      <div class="dcard clonly" data-st="acct"><h3>Phân quyền</h3><p class="hint"><b>Quản trị viên:</b> toàn quyền, quản lý người dùng, phân quyền, cài đặt hệ thống.</p><p class="hint"><b>Auditor:</b> tạo audit; chỉ sửa audit mình tạo hoặc được giao.</p><p class="hint"><b>Người xem:</b> chỉ xem và tải báo cáo.</p><p class="hint">Máy chủ kiểm tra quyền ở mọi thao tác, nên người khác không sửa được dữ liệu của bạn.</p></div>
       <div class="dcard" data-st="ui"><h3>Giao diện</h3>
         <div class="sopts" role="radiogroup" aria-label="Kiểu giao diện">
           <label><input type="radio" name="uim" value="auto"><span><b>Tự động theo thiết bị</b><small>Màn hình rộng hơn 920px dùng giao diện máy tính, hẹp hơn dùng giao diện điện thoại.</small></span></label>
@@ -789,6 +877,7 @@ details.hintd>summary::-webkit-details-marker{display:none}
         
       </div>
       <div class="dcard" data-st="crit"><h3>Tiêu chí đánh giá</h3>
+        <p class="hint" id="clCritNote" hidden>Quản trị viên đã khóa tiêu chí đánh giá cho cả hệ thống. Chỉ quản trị viên sửa được.</p>
         <label class="chk"><input type="checkbox" id="cfSev"> Mức độ lấy đúng theo danh mục lỗi (khuyến nghị). Bỏ chọn để AI được tăng hoặc giảm mức theo ảnh.</label>
         <label class="chk"><input type="checkbox" id="cfMand"> Chỉ đánh dấu Mandatory khi mức độ là Priority (khuyến nghị). Bỏ chọn để AI tự đề xuất.</label>
         <label class="chk"><input type="checkbox" id="cfFix"> AI viết phương án khắc phục cho cột Improvement Plan của file Findings. Màn kiểm tra chỉ nêu vi phạm.</label>
@@ -818,11 +907,20 @@ details.hintd>summary::-webkit-details-marker{display:none}
     <div class="dhead" data-st="ref"><h2>Dữ liệu tham chiếu cho AI</h2><small>Danh mục Guider, tài liệu, thư viện lỗi, sổ kinh nghiệm</small></div>
     <div class="sgrid sknow" id="setKnow" data-st="ref"></div>
   </div></section>
+  <section class="cpage" id="cloudPage" aria-label="Kho audit online"><div class="dwrap">
+    <div class="dhead"><h2>Kho audit online</h2><small>Đối tác → Lần audit → Khu vực → Ảnh và lỗi</small></div>
+    <div id="cloudB"></div>
+  </div></section>
+  <section class="cpage" id="adminPage" aria-label="Quản trị"><div class="dwrap">
+    <div class="dhead"><h2>Quản trị hệ thống</h2><small>Người dùng, phân quyền, cài đặt hệ thống, nhật ký</small></div>
+    <div id="adminB"></div>
+  </div></section>
   <nav class="tabbar" aria-label="Màn hình">
     <button data-v="photos" aria-current="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Ảnh<i class="cnt n" id="tcPhotos"></i></button>
     <button data-v="review" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg><span class="tl">Kiểm tra vi phạm</span></button>
     <button data-v="list" aria-current="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg><span class="tl">Xác nhận lỗi</span><i class="cnt" id="tcList"></i></button>
     <button data-v="hub" aria-current="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg>Báo cáo</button>
+    <button data-v="cloud" class="clonly" aria-current="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>Kho</button>
   </nav>
   <div class="scrim" id="scrim"></div>
 </div>
@@ -896,6 +994,42 @@ details.hintd>summary::-webkit-details-marker{display:none}
 <input type="file" id="docFile" class="vh" accept=".pdf,.docx,.xlsx,.xlsm,.txt,.csv,.md,application/pdf,image/*" multiple tabindex="-1">
 <input type="file" id="libFile" class="vh" accept=".xlsm,.xlsx,.json,application/json,application/vnd.ms-excel.sheet.macroEnabled.12,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" multiple tabindex="-1">
 <input type="file" id="gdFile" class="vh" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" tabindex="-1">
+<div class="clgate" id="clGate" hidden>
+  <form id="clForm" autocomplete="on">
+    <div class="cllogo"><img src="icon-192.png" alt=""><div><h1>Audit RBA</h1><small class="hint">Đăng nhập để dùng app</small></div></div>
+    <label>Email<input id="clEmail" type="email" autocomplete="username" required></label>
+    <label>Mật khẩu<input id="clPass" type="password" autocomplete="current-password" required></label>
+    <p class="msg" id="clGateMsg"></p>
+    <button class="btn primary" id="clGo" type="submit">Đăng nhập</button>
+    <p class="hint">Tài khoản do quản trị viên cấp. Quên mật khẩu: liên hệ quản trị viên để đặt lại.</p>
+  </form>
+</div>
+<dialog id="dlgClPw">
+  <div class="dh"><h2>Đổi mật khẩu</h2></div>
+  <form class="db" id="clPwForm">
+    <p class="hint" id="clPwMsg"></p>
+    <label>Mật khẩu hiện tại<input id="clPwOld" type="password" autocomplete="current-password" required></label>
+    <label>Mật khẩu mới (ít nhất 8 ký tự)<input id="clPwNew" type="password" autocomplete="new-password" required minlength="8"></label>
+    <label>Nhập lại mật khẩu mới<input id="clPwNew2" type="password" autocomplete="new-password" required minlength="8"></label>
+    <div class="g2"><button class="btn primary" type="submit">Lưu mật khẩu</button><button class="btn" type="button" id="clPwCancel">Hủy</button></div>
+  </form>
+</dialog>
+<dialog id="dlgClUser">
+  <div class="dh"><h2 id="clUH">Người dùng</h2></div>
+  <form class="db">
+    <label>Họ tên<input id="clUName" required></label>
+    <label>Email đăng nhập<input id="clUEmail" type="email" required></label>
+    <label>Vai trò<select id="clURole"><option value="auditor">Auditor: tạo audit, sửa audit của mình hoặc được giao</option><option value="viewer">Người xem: chỉ xem, tải báo cáo</option><option value="admin">Quản trị viên: toàn quyền</option></select></label>
+    <label id="clUPwRow">Mật khẩu tạm (người dùng đổi khi đăng nhập lần đầu)<span class="clpwr"><input id="clUPw" autocomplete="off"><button class="btn" type="button" id="clUGen">Tạo mới</button></span></label>
+    <p class="clmsg" id="clUMsg"></p>
+    <div class="g2"><button class="btn primary" id="clUSave" type="submit">Lưu</button><button class="btn" type="button" id="clUCancel">Hủy</button></div>
+  </form>
+</dialog>
+<dialog id="dlgClMem">
+  <div class="dh"><h2 id="clMemH">Giao audit</h2></div>
+  <div class="db stack"><div id="clMemB"></div>
+    <div class="g2"><button class="btn primary" id="clMemSave">Lưu phân quyền</button><button class="btn" id="clMemCancel">Hủy</button></div></div>
+</dialog>
 <div id="toast" role="status"></div>
 
 
@@ -987,7 +1121,7 @@ function pickWatch(){
 }
 const isZipF=f=>/\.zip$/i.test(f.name)||/zip/.test(f.type||''),isImgF=f=>(f.type||'').startsWith('image/')||/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name);
 /* ---------- Bản cài trên điện thoại: cài app, chạy khi mất mạng, cài đặt AI ---------- */
-const APP_VER='1.2';
+const APP_VER='1.3';
 const IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const STANDALONE=()=>!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));
 function offerSave(f){
@@ -1066,11 +1200,11 @@ function ask(title,text,btns){return new Promise(res=>{const d=$('dlgAsk');let d
   d.onclose=()=>fin1(null);d.showModal()})}
 async function newAudit(){
   const real=S.photos.filter(p=>!p.sample),n=real.length,nf=real.reduce((a,p)=>a+p.findings.length,0);
-  const v=await ask('Bắt đầu audit mới?',n?`Sẽ xóa ${n} ảnh và ${nf} lỗi đang có trên máy này, đặt lại tên đối tác và ngày audit. Thư viện lỗi, sổ kinh nghiệm, key AI, cài đặt và tên Auditor được giữ nguyên. Muốn giữ lại dữ liệu, hãy xuất file Findings hoặc xuất gói trước.`:'Đặt lại tên đối tác và ngày audit để bắt đầu lần audit mới.',
+  const v=await ask('Bắt đầu audit mới?',n?`Sẽ xóa ${n} ảnh và ${nf} lỗi đang có trên máy này, đặt lại tên đối tác và ngày audit. Thư viện lỗi, sổ kinh nghiệm, key AI, cài đặt và tên Auditor được giữ nguyên. ${API&&CL.auth?'Ảnh và lỗi đã lưu online vẫn còn trong Kho audit.':'Muốn giữ lại dữ liệu, hãy xuất file Findings hoặc xuất gói trước.'}`:'Đặt lại tên đối tác và ngày audit để bắt đầu lần audit mới.',
     [...(n?[{label:'Xuất gói để lưu lại trước',v:'pack'}]:[]),{label:n?`Xóa ${n} ảnh và bắt đầu audit mới`:'Bắt đầu audit mới',cls:'danger',v:'go'},{label:'Hủy',v:null}]);
   if(v==='pack'){try{await exportPack()}catch{toast('Không tạo được gói. Hãy thử lại.')}return}
-  if(v!=='go')return;
-  bgStop();for(const p of S.photos)Store.del(p.id);S.photos=[];S.sel=null;S.cur=null;S.psel=null;S.fsel=null;S.listAll=true;S.lf='all';
+  if(v!=='go')return;if(!(await clBeforeSwitch()))return;
+  bgStop();CL.mute++;for(const p of S.photos)Store.del(p.id);CL.mute--;clNewAudit();S.photos=[];S.sel=null;S.cur=null;S.psel=null;S.fsel=null;S.listAll=true;S.lf='all';
   $('mUnit').value='';$('mDate').value=today();metaSave();addSample();closeHub();
   renderAll();fit();hubRefresh();if(isMobile())setView('photos');toast('Đã bắt đầu audit mới. Thêm ảnh để AI soát.');
 }
@@ -3114,6 +3248,430 @@ $('dlgDel').addEventListener('click',e=>{const b=e.target.closest('button[data-r
 ['mSub','mUnit','mWho','mDate'].forEach(k=>$(k).addEventListener('input',uiExtra));
 addEventListener('online',netState);addEventListener('offline',netState);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&$('app').classList.contains('hubon'))closeHub()});
+
+/* ---------- Online: đăng nhập, lưu trữ theo phân vùng, phân quyền, quản trị ---------- */
+/* Phân vùng: Đối tác → Lần audit (ngày) → Khu vực → Ảnh / Lỗi. Máy vẫn lưu tạm như cũ (chạy khi mất mạng), có mạng thì tự đồng bộ.
+   Quyền: admin (toàn quyền), auditor (sửa audit mình tạo hoặc được giao), viewer (chỉ xem). Máy chủ kiểm tra quyền ở mọi thao tác. */
+const API='https://audit-rba-api.likiop00.workers.dev'.replace(/\/$/,'');
+const ROLE_L={admin:'Quản trị viên',auditor:'Auditor',viewer:'Người xem'};
+const ROLE_D={admin:'Toàn quyền: quản lý người dùng, phân quyền, cài đặt hệ thống, sửa và xóa mọi audit.',auditor:'Tạo audit mới; chỉ sửa audit do mình tạo hoặc được quản trị viên giao. Xem được mọi audit.',viewer:'Chỉ xem và tải báo cáo, không sửa được dữ liệu online.'};
+const CL={auth:null,sys:{},users:[],audit:null,q:{data:new Set(),img:new Set(),del:new Set()},mute:0,busy:false,t:0,lastPull:0,err:'',metaDirty:false,booted:false,lsRemoved:new Set(),kho:{q:'',year:'',mine:false,open:new Set(),exp:null,photos:new Map(),list:null,res:null},adm:{tab:'users',log:null,stats:null}};
+const clLS=(k,v)=>{try{if(v===undefined){const s=localStorage.getItem('soat-ehs-cl-'+k);return s?JSON.parse(s):null}if(v===null)localStorage.removeItem('soat-ehs-cl-'+k);else localStorage.setItem('soat-ehs-cl-'+k,JSON.stringify(v))}catch{return null}};
+CL.auth=clLS('auth');CL.audit=clLS('audit');CL.lastPull=clLS('pull')||0;
+{const q=clLS('q');if(q){CL.q.data=new Set(q.data||[]);CL.q.img=new Set(q.img||[]);CL.q.del=new Set(q.del||[])}}
+const clSaveQ=()=>clLS('q',{data:[...CL.q.data],img:[...CL.q.img],del:[...CL.q.del]});
+const clQN=()=>new Set([...CL.q.data,...CL.q.img,...CL.q.del]).size;
+const clOn=()=>!!(API&&CL.auth&&CL.auth.token);
+const clRole=()=>CL.auth&&CL.auth.user?CL.auth.user.role:'';
+const clAdmin=()=>clRole()==='admin';
+const clCanCreate=()=>['admin','auditor'].includes(clRole());
+const RO=()=>clOn()&&!(CL.audit?CL.audit.can_edit:clCanCreate());
+const clName=id=>{const u=CL.users.find(x=>x.id===id);return u?(u.name||u.email):''};
+const vnDT=t=>t?new Date(t).toLocaleString('vi-VN',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}):'';
+const clGenPw=()=>{const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789',a=crypto.getRandomValues(new Uint8Array(10));return[...a].map(b=>c[b%c.length]).join('')+'@'+(10+a[0]%90)};
+
+async function api(method,path,body,opt={}){
+  const hd={};if(CL.auth&&CL.auth.token)hd.Authorization='Bearer '+CL.auth.token;
+  let b=body;if(body!==undefined&&!(body instanceof Blob)){hd['Content-Type']='application/json';b=JSON.stringify(body)}else if(body instanceof Blob)hd['Content-Type']=body.type||'image/jpeg';
+  let r;try{r=await fetch(API+path,{method,headers:hd,body:b,signal:opt.signal})}catch(e){const er=new Error('Không kết nối được máy chủ. Kiểm tra mạng.');er.net=true;throw er}
+  if(r.status===401&&!opt.noLogout&&CL.auth){clLogout(true);const er=new Error('Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.');er.status=401;throw er}
+  if(opt.blob){if(!r.ok){const er=new Error('Không tải được ảnh.');er.status=r.status;throw er}return r.blob()}
+  let d=null;try{d=await r.json()}catch{}
+  if(!r.ok&&!(opt.ok409&&r.status===409)){const er=new Error((d&&d.error)||`Lỗi máy chủ (${r.status}).`);er.status=r.status;throw er}
+  return d||{};
+}
+
+/* ---------- đăng nhập ---------- */
+function clGate(show){const g=$('clGate');if(!g)return;g.hidden=!show;document.documentElement.classList.toggle('clgate',!!show);if(show)setTimeout(()=>{const e=$('clEmail');if(e&&!e.value)e.focus();else if($('clPass'))$('clPass').focus()},50)}
+async function clLogin(e){
+  if(e)e.preventDefault();const email=$('clEmail').value.trim(),pw=$('clPass').value,m=$('clGateMsg'),b=$('clGo');
+  if(!email||!pw){m.textContent='Nhập email và mật khẩu.';return}
+  b.disabled=true;m.textContent='Đang đăng nhập…';
+  try{const r=await api('POST','/api/login',{email,password:pw},{noLogout:true});
+    const prev=clLS('lastuser');CL.auth={token:r.token,user:r.user,exp:r.expires_at};clLS('auth',CL.auth);clLS('lastuser',r.user.id);$('clPass').value='';m.textContent='';clGate(false);
+    if(prev&&prev!==r.user.id&&CL.audit){CL.audit.can_edit=false}
+    if(!$('mWho').value.trim()){$('mWho').value=r.user.name;metaSave();uiExtra()}
+    toast(`Xin chào ${r.user.name}. Vai trò: ${ROLE_L[r.user.role]}.`);
+    await clBoot(true);if(r.user.must_change)clPwDialog(true);
+  }catch(er){m.textContent=er.message}finally{b.disabled=false}
+}
+function clLogout(expired){
+  const t=CL.auth&&CL.auth.token;if(t&&!expired)fetch(API+'/api/logout',{method:'POST',headers:{Authorization:'Bearer '+t}}).catch(()=>{});
+  CL.auth=null;clLS('auth',null);CL.booted=false;clApply();clGate(true);
+  if(expired)$('clGateMsg').textContent='Phiên đăng nhập đã hết hạn hoặc tài khoản đã bị khóa. Hãy đăng nhập lại.';
+}
+async function clLogoutWipe(){
+  const n=clQN();const v=await ask('Đăng xuất và xóa dữ liệu trên máy?',`${n?`Còn ${n} ảnh chưa lưu online, sẽ bị mất. `:''}Ảnh, lỗi, sổ kinh nghiệm và cài đặt trên máy này sẽ bị xóa. Dữ liệu đã lưu online vẫn còn trong Kho audit. Dùng khi đăng nhập trên máy dùng chung.`,[{label:'Đăng xuất và xóa',cls:'danger',v:'go'},{label:'Hủy',v:null}]);
+  if(v!=='go')return;const t=CL.auth&&CL.auth.token;if(t)try{await fetch(API+'/api/logout',{method:'POST',headers:{Authorization:'Bearer '+t}})}catch{}
+  try{bgStop()}catch{}try{Store.db&&Store.db.close()}catch{}try{for(const k of Object.keys(localStorage))if(k.startsWith('soat-ehs')&&k!=='soat-ehs-ui'&&k!=='soat-ehs-theme')localStorage.removeItem(k)}catch{}
+  const q=indexedDB.deleteDatabase('soat-ehs');q.onsuccess=q.onerror=q.onblocked=()=>location.reload();
+}
+function clPwDialog(force){
+  const d=$('dlgClPw');$('clPwOld').value='';$('clPwNew').value='';$('clPwNew2').value='';$('clPwMsg').textContent=force?'Đây là lần đăng nhập đầu hoặc mật khẩu vừa được đặt lại. Hãy đổi mật khẩu riêng của bạn.':'';
+  $('clPwCancel').hidden=!!force;d.dataset.force=force?'1':'';d.showModal();
+}
+async function clPwSave(e){
+  e.preventDefault();const o=$('clPwOld').value,n=$('clPwNew').value,n2=$('clPwNew2').value,m=$('clPwMsg');
+  if(n.length<8)return m.textContent='Mật khẩu mới cần ít nhất 8 ký tự.';if(n!==n2)return m.textContent='Hai lần nhập mật khẩu mới không giống nhau.';
+  try{await api('POST','/api/me/password',{old:o,new:n});CL.auth.user.must_change=false;clLS('auth',CL.auth);$('dlgClPw').dataset.force='';$('dlgClPw').close();toast('Đã đổi mật khẩu.')}catch(er){m.textContent=er.message}
+}
+
+/* ảnh lớn được nén lại trước khi lưu online (máy chủ nhận tối đa ~1,9 MB/ảnh) */
+async function clShrink(blob){
+  if(!blob||blob.size<=1800000)return blob;
+  try{const bm=await createImageBitmap(blob);let side=2560,q=.86,out=blob;
+    for(let i=0;i<6&&out.size>1800000;i++){const k=Math.min(1,side/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
+      out=await new Promise(r=>c.toBlob(r,'image/jpeg',q))||out;side=Math.round(side*.82);q=Math.max(.7,q-.04)}
+    try{bm.close()}catch{}return out}catch{return blob}
+}
+
+/* ---------- khởi động phần online ---------- */
+async function clBoot(fresh){
+  clApply();if(!clOn())return;
+  try{const r=await api('GET','/api/me');CL.auth.user=r.user;clLS('auth',CL.auth);CL.sys=r.sys||{};clLS('sys',CL.sys);clApplySys()}
+  catch(e){if(e.net){CL.sys=clLS('sys')||{};clApplySys();clApply();return}if(e.status===401)return}
+  clUsers();
+  if(CL.audit)try{const r=await api('GET','/api/audits/'+CL.audit.id);CL.audit=r.audit;clLS('audit',CL.audit)}catch(e){if(e.status===404||e.status===410){CL.audit=null;clLS('audit',null);CL.lastPull=0;clLS('pull',0)}}
+  CL.booted=true;clApply();clLearnSync();clSync();
+  if(fresh&&CL.auth.user.must_change)return;
+}
+async function clUsers(){try{const r=await api('GET','/api/users');CL.users=r.users||[]}catch{}}
+function clApplySys(){
+  const s=CL.sys||{};
+  if(s.lockCrit&&s.cfg&&typeof s.cfg==='object'){for(const k of['sevLock','mandRule','fixes','minConf'])if(s.cfg[k]!==undefined)CFG[k]=s.cfg[k];if(s.cfg.due)CFG.due={...CFG.due,...s.cfg.due};cfgSave();try{syncSettings()}catch{}}
+  const lock=!!s.lockCrit&&!clAdmin();
+  document.querySelectorAll('#settings [data-st="crit"] input,#settings [data-st="crit"] select,#cfApply').forEach(el=>{el.disabled=lock});
+  const n=$('clCritNote');if(n)n.hidden=!lock;
+  if(s.defaultSub&&(!$('mSub').value.trim()||$('mSub').value.trim()==='SEV/T')&&!S.photos.some(p=>!p.sample)){$('mSub').value=s.defaultSub;metaSave()}
+  if(s.org){const b=$('brandSub');if(b&&!b.dataset.org){b.dataset.org='1';b.textContent=s.org+' · '+b.textContent}}
+}
+
+/* ---------- trạng thái, chế độ chỉ xem ---------- */
+function clApply(){
+  const on=clOn(),u=on?CL.auth.user:null,ro=RO();
+  document.documentElement.dataset.role=u?u.role:'';document.documentElement.dataset.ro=ro?'1':'';
+  const b=$('clUser');if(b){b.hidden=!API;const ini=u?(u.name||u.email).split(/\s+/).filter(Boolean).slice(-2).map(s=>s[0]).join('').toUpperCase():'?';$('clIni').textContent=ini;b.title=u?`${u.name} · ${ROLE_L[u.role]}`:'Chưa đăng nhập'}
+  const bn=$('clRo');if(bn){bn.hidden=!ro;if(ro){const a=CL.audit;$('clRoMsg').textContent=a?`Chỉ xem: audit ${a.vendor||'(chưa nhập đối tác)'}${a.date?' · '+vnDate(a.date):''} của ${a.owner_name||'người khác'}${a.status==='locked'?' (đã khóa)':''}. Bạn không sửa được audit này; thay đổi trên máy không được lưu online.`:'Bạn có quyền Người xem: ảnh và lỗi thêm trên máy này không được lưu online.'}}
+  document.querySelectorAll('.cl-admin').forEach(el=>el.hidden=!(u&&u.role==='admin'));
+  clStatus();
+}
+function clStatus(){
+  const el=$('clDot');if(!el)return;let st='off',t='Chưa đăng nhập';
+  if(clOn()){const n=clQN();
+    if(RO()){st='ro';t='Chỉ xem'}
+    else if(CL.busy){st='sync';t=`Đang lưu online${n?` (${n})`:''}…`}
+    else if(n&&(NET.off||!navigator.onLine)){st='wait';t=`${n} ảnh chờ mạng để lưu online`}
+    else if(CL.err&&n){st='err';t=CL.err}
+    else if(n){st='wait';t=`${n} ảnh chờ lưu online`}
+    else{st='ok';t=CL.audit?'Đã lưu online':'Đã đăng nhập'}}
+  el.dataset.st=st;$('clUser').title=(CL.auth&&CL.auth.user?`${CL.auth.user.name} · ${ROLE_L[CL.auth.user.role]}\n`:'')+t;
+  const s=$('clSyncStat');if(s)s.textContent=t;
+}
+
+/* ---------- theo dõi thay đổi trên máy ---------- */
+{const _touch=Store.touch.bind(Store),_del=Store.del.bind(Store);
+  Store.touch=function(p,keep){_touch(p,keep);if(CL.mute||!API||!p||p.sample)return;if(!p._bs)CL.q.img.add(p.id);CL.q.data.add(p.id);CL.q.del.delete(p.id);clSaveQ();clSoon()};
+  Store.del=function(id){_del(id);if(CL.mute||!API)return;CL.q.data.delete(id);CL.q.img.delete(id);if(CL.audit)CL.q.del.add(id);clSaveQ();clSoon()};}
+function clSoon(ms){clearTimeout(CL.t);CL.t=setTimeout(clSync,ms||2500);clStatus()}
+['mSub','mUnit','mWho','mDate'].forEach(k=>$(k).addEventListener('input',()=>{if(!API)return;CL.metaDirty=true;clSoon(4000)}));
+const clMeta=()=>({vendor:$('mUnit').value.trim(),sub:$('mSub').value.trim(),date:$('mDate').value||today(),auditors:$('mWho').value.trim()});
+const clData=p=>({id:p.id,ord:p.ord,name:p.name,area:p.area,note:p.note,findings:p.findings.map(f=>({...f,pending:false})),analysis:p.analysis,by:p.by,at:p.at,upd:p.upd||Date.now(),w:p.w,h:p.h,thumb:p.thumb});
+async function pool(items,n,fn){let i=0;await Promise.all(Array.from({length:Math.min(n,items.length)},async()=>{while(i<items.length){const x=items[i++];await fn(x)}}))}
+
+async function clSync(){
+  clearTimeout(CL.t);
+  if(!clOn()||!CL.booted||CL.busy||NET.off)return;
+  if(RO()){if(CL.audit)try{CL.busy=true;await clPull()}catch{}finally{CL.busy=false;clStatus()}return}
+  CL.busy=true;CL.err='';clStatus();
+  try{
+    const real=S.photos.filter(p=>!p.sample);
+    if(!CL.audit){
+      if(!real.length&&!CL.q.data.size)return;
+      const r=await api('POST','/api/audits',{id:uid()+uid(),...clMeta()});CL.audit=r.audit;clLS('audit',CL.audit);CL.metaDirty=false;CL.lastPull=0;clLS('pull',0);clApply();
+      for(const p of real){CL.q.data.add(p.id);if(p.blob)CL.q.img.add(p.id)}CL.q.del.clear();clSaveQ();
+      toast(`Đã tạo audit online: ${CL.audit.vendor||'(chưa nhập đối tác)'}. Ảnh và lỗi tự lưu lên hệ thống.`);
+    }else if(CL.metaDirty){const r=await api('PATCH','/api/audits/'+CL.audit.id,clMeta());CL.audit=r.audit;clLS('audit',CL.audit);CL.metaDirty=false}
+    const id=CL.audit.id;
+    for(const pid of[...CL.q.del]){await api('DELETE',`/api/audits/${id}/photos/${pid}`).catch(e=>{if(e.status!==404)throw e});CL.q.del.delete(pid);clSaveQ()}
+    await pool([...CL.q.img],3,async pid=>{const p=S.photos.find(x=>x.id===pid);if(p&&p.blob)await api('PUT',`/api/audits/${id}/photos/${pid}/img`,await clShrink(p.blob));CL.q.img.delete(pid);clSaveQ();clStatus()});
+    await pool([...CL.q.data],4,async pid=>{const p=S.photos.find(x=>x.id===pid);if(p&&!p.sample)await api('PUT',`/api/audits/${id}/photos/${pid}`,clData(p),{ok409:true});CL.q.data.delete(pid);clSaveQ();clStatus()});
+    await clPull();
+  }catch(e){CL.err=e.message;if(e.status===403||e.status===410||e.status===404){try{const r=await api('GET','/api/audits/'+CL.audit.id);CL.audit=r.audit;clLS('audit',CL.audit)}catch(e2){if(e2.status===404){CL.audit=null;clLS('audit',null)}}clApply();toast(e.message)}else if(!e.net)console.warn(e);setTimeout(clSync,30000)}
+  finally{CL.busy=false;clStatus()}
+}
+/* lấy thay đổi của người khác trong cùng audit (hoặc tải cả audit khi mở) */
+async function clPull(progress){
+  if(!CL.audit)return 0;const id=CL.audit.id;
+  const r=await api('GET',`/api/audits/${id}/photos?since=${CL.lastPull||0}`);if(!CL.audit||CL.audit.id!==id)return 0;
+  const rows=r.photos||[];let ch=0,done=0,maxSrv=CL.lastPull||0;const dirty=new Set([...CL.q.data,...CL.q.img]);
+  const todo=rows.filter(x=>{maxSrv=Math.max(maxSrv,x.srv||0);return true});
+  await pool(todo,4,async row=>{
+    const loc=S.photos.find(p=>p.id===row.id);
+    if(row.deleted){if(loc&&!dirty.has(row.id)){CL.mute++;Store.del(row.id);CL.mute--;S.photos=S.photos.filter(p=>p!==loc);ch++}return}
+    const d=row.data||{};if(!d.upd||dirty.has(row.id))return;if(loc&&(loc.upd||0)>=d.upd)return;
+    let blob=loc&&loc.blob;if(!blob){if(!row.has_img)return;try{blob=await api('GET',`/api/audits/${id}/photos/${row.id}/img`,undefined,{blob:true})}catch{return}}
+    const findings=(Array.isArray(d.findings)?d.findings:[]).filter(f=>f&&f.s);
+    const np=makePhoto({id:row.id,ord:Number(d.ord)||Date.now(),name:d.name||'Ảnh',blob,w:d.w||0,h:d.h||0,thumb:d.thumb||'',area:d.area||'',note:d.note||'',findings,analysis:d.analysis||null,by:d.by||'',at:d.at||0,upd:d.upd});
+    if(!np.thumb||!np.w){try{const c=await decodeImg(blob);np.w=c.width;np.h=c.height;np.thumb=thumbOf(c)}catch{}}
+    const i=S.photos.indexOf(S.photos.find(p=>p.id===row.id));if(i>=0)S.photos[i]=np;else S.photos.push(np);
+    CL.mute++;Store.touch(np,true);CL.mute--;ch++;done++;if(progress)progress(done,todo.length);
+  });
+  CL.lastPull=maxSrv;clLS('pull',maxSrv);
+  if(ch){const real=S.photos.filter(p=>!p.sample);if(real.length)S.photos=real.sort((a,b)=>a.ord-b.ord);if(!S.photos.length)addSample();if(!cur())S.cur=S.photos[0].id;renderAll();try{fit()}catch{}if(CL.kho.list)renderKho()}
+  return ch;
+}
+/* trước khi đổi audit trên máy: lưu nốt thay đổi */
+async function clBeforeSwitch(){
+  if(!clOn()||RO()){CL.q.data.clear();CL.q.img.clear();CL.q.del.clear();clSaveQ();return true}
+  if(clQN()&&!NET.off){toast('Đang lưu nốt lên hệ thống…');for(let i=0;i<3&&clQN();i++){while(CL.busy)await new Promise(r=>setTimeout(r,300));await clSync()}}
+  const n=clQN();if(!n)return true;
+  const v=await ask('Còn dữ liệu chưa lưu online',`${n} ảnh chưa lưu được lên hệ thống${CL.err?` (${CL.err})`:''}. Tiếp tục sẽ mất các thay đổi này trên máy.`,[{label:'Xuất gói để giữ lại',v:'pack'},{label:'Vẫn tiếp tục',cls:'danger',v:'go'},{label:'Hủy',v:null}]);
+  if(v==='pack'){try{await exportPack()}catch{}return false}
+  if(v!=='go')return false;CL.q.data.clear();CL.q.img.clear();CL.q.del.clear();clSaveQ();return true;
+}
+function clNewAudit(){CL.audit=null;clLS('audit',null);CL.lastPull=0;clLS('pull',0);CL.q.data.clear();CL.q.img.clear();CL.q.del.clear();clSaveQ();CL.metaDirty=false;clApply()}
+async function clOpenAudit(a,photoId){
+  if(CL.audit&&CL.audit.id===a.id){CL.audit=a;clLS('audit',a);clApply();if(photoId&&S.photos.some(p=>p.id===photoId))open(photoId);clGo('review');return}
+  if(!(await clBeforeSwitch()))return;
+  try{bgStop()}catch{}CL.mute++;for(const p of S.photos)Store.del(p.id);CL.mute--;S.photos=[];S.sel=null;S.cur=null;S.psel=null;S.fsel=null;
+  CL.audit=a;clLS('audit',a);CL.lastPull=0;clLS('pull',0);CL.q.data.clear();CL.q.img.clear();CL.q.del.clear();clSaveQ();
+  $('mUnit').value=a.vendor||'';if(a.sub)$('mSub').value=a.sub;$('mDate').value=a.date||today();$('mWho').value=a.auditors||'';metaSave();CL.metaDirty=false;
+  clApply();addSample();S.cur=S.photos[0].id;renderAll();
+  toast(`Đang tải audit ${a.vendor||''}…`);
+  try{await clPull((d,n)=>{if(d%3===0||d===n)toast(`Đang tải ảnh ${d}/${n}…`)})}catch(e){toast(e.message)}
+  if(!S.photos.length)addSample();if(photoId&&S.photos.some(p=>p.id===photoId))S.cur=photoId;else S.cur=S.photos[0].id;
+  renderAll();try{fit()}catch{}uiExtra();
+  toast(`Đã mở audit ${a.vendor||''}: ${S.photos.filter(p=>!p.sample).length} ảnh.${a.can_edit?'':' Chế độ chỉ xem.'}`);clGo('review');
+}
+function clGo(v){if(isMobile())setView(v==='dash'?'review':v);else setDView(v)}
+
+/* ---------- đồng bộ sổ kinh nghiệm và Guider dùng chung cả đội ---------- */
+cloudGet=async k=>{if(!clOn())return null;try{return(await api('GET','/api/kv/'+k)).value}catch{return null}};
+cloudPut=(k,v)=>{if(!clOn())return Promise.resolve();if(k==='lessons'){if(!clCanCreate())return Promise.resolve();v={...v,removed:[...CL.lsRemoved]}}else if(!clAdmin())return Promise.resolve();
+  return api('PUT','/api/kv/'+k,v).then(()=>{if(k==='lessons')CL.lsRemoved.clear()}).catch(()=>{})};
+{const _ld=Learn.del.bind(Learn),_lc=Learn.clear.bind(Learn);Learn.del=id=>{CL.lsRemoved.add(id);_ld(id)};Learn.clear=()=>{for(const x of Learn.items)CL.lsRemoved.add(x.id);_lc()}}
+async function clLearnSync(){
+  if(!clOn())return;
+  const[ls,gd]=await Promise.all([cloudGet('lessons'),cloudGet('guider')]);
+  const remote=ls&&Array.isArray(ls.items)?ls.items.filter(okLesson):[],ids=new Set(remote.map(x=>x.id));
+  Learn.merge(remote);if(Learn.items.some(x=>!ids.has(x.id)))cloudPut('lessons',{items:Learn.items,upd:Date.now()});
+  if(gd&&(gd.at||0)>(GUIDER.at||0)){
+    if(typeof gd.json==='string'){let codes=null;try{codes=JSON.parse(gd.json)}catch{}
+      if(codes){const f=await cloudGet('guiderfile'),g={codes,ver:gd.ver,date:gd.date,name:gd.name,at:gd.at,diffRep:Array.isArray(gd.diffRep)?gd.diffRep:[],file:f&&f.at===gd.at&&typeof f.b64==='string'?b64bytes(f.b64):null};applyGuider(g);await Store.kvSet('guider',g);toast(`Đã đồng bộ dữ liệu Guider ${GUIDER.ver} từ hệ thống.`)}}
+    else if(GUIDER.src==='file'){applyGuider(null);await Store.kvSet('guider',null)}
+  }else if(clAdmin()&&GUIDER.src==='file'&&(!gd||(gd.at||0)<GUIDER.at))pushGuider();
+  hubRefresh();
+}
+cloudSync=async()=>{if(!API)return;if(!clOn()){clGate(true);return}await clBoot()};
+{const _br=bgReady;bgReady=()=>!RO()&&_br()}
+
+/* ---------- Kho audit online: Đối tác → Lần audit → Khu vực → Ảnh ---------- */
+async function clKhoLoad(){
+  const k=CL.kho;try{const r=await api('GET','/api/audits'+(k.mine?'?mine=1':''));k.list=r.audits||[]}catch(e){k.err=e.message;k.list=k.list||[]}renderKho();
+}
+async function clKhoPhotos(a){
+  try{const r=await api('GET',`/api/audits/${a.id}/photos`);CL.kho.photos.set(a.id,(r.photos||[]).filter(x=>!x.deleted&&x.data&&x.data.upd))}catch(e){toast(e.message)}renderKho();
+}
+let khoSearchT=0;
+function renderKho(){
+  const P=$('cloudB');if(!P)return;const k=CL.kho;
+  if(!clOn()){P.replaceChildren(h('div',{class:'dcard'},h('h3',null,'Chưa đăng nhập'),h('p',{class:'hint'},'Đăng nhập để xem và lưu audit online.'),h('button',{class:'btn primary',onclick:()=>clGate(true)},'Đăng nhập')));return}
+  if(!k.list){P.replaceChildren(h('p',{class:'hint'},'Đang tải danh sách audit…'));clKhoLoad();return}
+  const years=[...new Set(k.list.map(a=>(a.date||'').slice(0,4)).filter(Boolean))].sort().reverse();
+  const ql=k.q.trim().toLowerCase();
+  const list=k.list.filter(a=>(!k.year||(a.date||'').startsWith(k.year))&&(!ql||[a.vendor,a.auditors,a.sub,a.owner_name,...(a.areas||[])].some(x=>String(x||'').toLowerCase().includes(ql))));
+  const byV=new Map();for(const a of list){const v=a.vendor||'(Chưa nhập đối tác)';if(!byV.has(v))byV.set(v,[]);byV.get(v).push(a)}
+  const tools=h('div',{class:'ttool clkt'},
+    h('input',{type:'search',id:'khoQ',placeholder:'Tìm đối tác, khu vực, auditor… (Enter: tìm cả nội dung lỗi)',value:k.q,'aria-label':'Tìm trong kho',oninput:e=>{k.q=e.target.value;k.res=null;clearTimeout(khoSearchT);khoSearchT=setTimeout(()=>{renderKho();const q=$('khoQ');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}},250)},onkeydown:e=>{if(e.key==='Enter')clKhoSearch()}}),
+    h('select',{'aria-label':'Năm',onchange:e=>{k.year=e.target.value;renderKho()}},h('option',{value:''},'Mọi năm'),...years.map(y=>h('option',{value:y,selected:k.year===y},y))),
+    h('label',{class:'chk'},h('input',{type:'checkbox',checked:k.mine,onchange:e=>{k.mine=e.target.checked;k.list=null;renderKho()}}),' Chỉ audit của tôi'),
+    h('button',{class:'btn',onclick:()=>clKhoSearch()},'Tìm lỗi'),
+    h('button',{class:'btn',onclick:()=>{k.list=null;k.photos.clear();renderKho()}},'Làm mới'),
+    clCanCreate()?h('button',{class:'btn primary',onclick:()=>clNewFromKho()},'+ Audit mới'):null);
+  const sum=h('p',{class:'hint'},`${byV.size} đối tác · ${list.length} lần audit · ${list.reduce((s,a)=>s+a.n_photos,0)} ảnh · ${list.reduce((s,a)=>s+a.n_f,0)} lỗi${k.err?` · ${k.err}`:''}`);
+  const res=k.res?h('div',{class:'dcard clres'},h('h3',null,`Kết quả tìm "${k.res.q}" (${k.res.items.length})`,h('button',{class:'btn sm',style:'float:right',onclick:()=>{k.res=null;renderKho()}},'Đóng')),
+    k.res.items.length?h('div',{class:'clgrid'},...k.res.items.map(x=>h('button',{class:'clph',onclick:()=>{const a=k.list.find(z=>z.id===x.audit_id);if(a)clOpenAudit(a,x.photo_id)}},x.thumb?h('img',{src:x.thumb,alt:''}):h('span',{class:'noimg'}),
+      h('b',null,x.vendor||'—'),h('small',null,[vnDate(x.date),x.area].filter(Boolean).join(' · ')),...x.findings.slice(0,3).map(f=>h('small',{class:'clf'},h('i',{class:'pill '+(f.sev||'')},f.sev||'—'),' ',f.title||''))))):h('p',{class:'hint'},'Không tìm thấy lỗi nào khớp.')):null;
+  const groups=[...byV.entries()].map(([v,as])=>{
+    const isOpen=k.open.has(v)||!!ql||byV.size<=3;
+    return h('div',{class:'clv'+(isOpen?' on':'')},
+      h('button',{class:'clvh',onclick:()=>{k.open.has(v)?k.open.delete(v):k.open.add(v);renderKho()}},h('b',null,v),h('small',null,`${as.length} lần audit · gần nhất ${vnDate(as.map(a=>a.date).sort().reverse()[0])||'—'} · ${as.reduce((s,a)=>s+a.n_f,0)} lỗi`),h('i',{class:'chev'},isOpen?'▾':'▸')),
+      isOpen?h('div',{class:'clal'},...as.map(a=>clAuditRow(a))):null)});
+  P.replaceChildren(tools,sum,...(res?[res]:[]),...(groups.length?groups:[h('div',{class:'dcard'},h('p',{class:'hint'},k.list.length?'Không có audit khớp bộ lọc.':'Chưa có audit nào trên hệ thống. Thêm ảnh và nhập thông tin audit, app sẽ tự lưu lên.'))]));
+}
+function clAuditRow(a){
+  const k=CL.kho,here=CL.audit&&CL.audit.id===a.id,exp=k.exp===a.id,ph=k.photos.get(a.id);
+  const mem=(a.members||[]).map(clName).filter(Boolean);
+  const row=h('div',{class:'cla'+(here?' here':'')},
+    h('div',{class:'clam'},h('b',null,vnDate(a.date)||'Chưa có ngày'),a.status==='locked'?h('span',{class:'pill Minor'},'Đã khóa'):null,here?h('span',{class:'pill okc'},'Đang mở trên máy này'):null,
+      h('small',null,[a.sub,a.auditors&&('Auditor: '+a.auditors),'Người tạo: '+(a.owner_name||'—'),mem.length&&('Được giao: '+mem.join(', '))].filter(Boolean).join(' · ')),
+      h('small',null,`${a.n_photos} ảnh · ${a.n_f} lỗi (${a.n_ok} đã xác nhận)${(a.areas||[]).length?' · '+a.areas.length+' khu vực':''} · cập nhật ${vnDT(a.updated_at)}`)),
+    h('div',{class:'claa'},h('button',{class:'btn sm',onclick:()=>{k.exp=exp?null:a.id;if(!exp&&!ph)clKhoPhotos(a);renderKho()}},exp?'Thu gọn':'Xem theo khu vực'),
+      h('button',{class:'btn sm primary',onclick:()=>clOpenAudit(a)},here?'Đang mở':a.can_edit?'Mở để sửa':'Mở để xem'),
+      clAdmin()?h('button',{class:'btn sm',onclick:()=>clMembersDialog(a)},'Giao người'):null,
+      clAdmin()?h('button',{class:'btn sm',onclick:()=>clLock(a)},a.status==='locked'?'Mở khóa':'Khóa'):null,
+      (clAdmin()||(CL.sys.auditorDelete&&a.owner_id===(CL.auth.user||{}).id))?h('button',{class:'btn sm danger',onclick:()=>clDelAudit(a)},'Xóa'):null));
+  if(!exp)return row;
+  if(!ph)return h('div',null,row,h('p',{class:'hint clpad'},'Đang tải ảnh…'));
+  const byA=new Map();for(const x of ph){const ar=(x.data.area||'').trim()||'(Chưa ghi khu vực)';if(!byA.has(ar))byA.set(ar,[]);byA.get(ar).push(x)}
+  return h('div',null,row,h('div',{class:'clareas'},...(byA.size?[...byA.entries()].sort((x,y)=>x[0].localeCompare(y[0],'vi')).map(([ar,xs])=>h('div',{class:'clar'},
+    h('h4',null,ar,h('small',null,` · ${xs.length} ảnh · ${xs.reduce((s,x)=>s+(x.data.findings||[]).length,0)} lỗi`)),
+    h('div',{class:'clgrid'},...xs.sort((p,q)=>(p.data.ord||0)-(q.data.ord||0)).map(x=>{const fs=x.data.findings||[];return h('button',{class:'clph',title:fs.map(f=>'• '+(f.title||'')).join('\n'),onclick:()=>clOpenAudit(a,x.id)},
+      x.data.thumb?h('img',{src:x.data.thumb,alt:''}):h('span',{class:'noimg'}),h('small',null,`${fs.length} lỗi · ${fs.filter(f=>f.ok).length} đã xác nhận`))})))):[h('p',{class:'hint'},'Audit chưa có ảnh.')])));
+}
+async function clKhoSearch(){
+  const q=CL.kho.q.trim();if(q.length<2)return toast('Nhập ít nhất 2 ký tự để tìm.');
+  try{const r=await api('GET','/api/search?q='+encodeURIComponent(q));CL.kho.res={q,items:r.results||[]};renderKho()}catch(e){toast(e.message)}
+}
+async function clNewFromKho(){
+  if(!S.photos.some(p=>!p.sample)&&!CL.audit){clGo('report');setTimeout(()=>$('mUnit').focus(),60);return}
+  if(!(await clBeforeSwitch()))return;
+  try{bgStop()}catch{}CL.mute++;for(const p of S.photos)Store.del(p.id);CL.mute--;S.photos=[];S.sel=null;S.cur=null;clNewAudit();
+  $('mUnit').value='';$('mDate').value=today();if(CL.auth)$('mWho').value=CL.auth.user.name;metaSave();addSample();renderAll();uiExtra();
+  toast('Đã bắt đầu audit mới. Nhập tên đối tác rồi thêm ảnh; app tự lưu online.');clGo('report');setTimeout(()=>$('mUnit').focus(),60);
+}
+async function clLock(a){
+  try{const r=await api('PATCH','/api/audits/'+a.id,{status:a.status==='locked'?'open':'locked'});clKhoPatch(r.audit);toast(r.audit.status==='locked'?'Đã khóa audit. Chỉ quản trị viên sửa được.':'Đã mở khóa audit.')}catch(e){toast(e.message)}
+}
+function clKhoPatch(a){const k=CL.kho;if(k.list){const i=k.list.findIndex(x=>x.id===a.id);if(i>=0)k.list[i]=a}if(CL.audit&&CL.audit.id===a.id){CL.audit=a;clLS('audit',a);clApply()}renderKho();if($('app').dataset.dview==='admin'||$('app').dataset.view==='admin')renderAdmin()}
+async function clDelAudit(a){
+  const v=await ask('Xóa audit này trên hệ thống?',`Audit ${a.vendor||''} ngày ${vnDate(a.date)||'—'}: ${a.n_photos} ảnh, ${a.n_f} lỗi sẽ bị xóa khỏi hệ thống. Không hoàn tác được.`,[{label:'Xóa audit',cls:'danger',v:'go'},{label:'Hủy',v:null}]);if(v!=='go')return;
+  try{await api('DELETE','/api/audits/'+a.id);const k=CL.kho;if(k.list)k.list=k.list.filter(x=>x.id!==a.id);if(CL.audit&&CL.audit.id===a.id)clNewAudit();toast('Đã xóa audit.');renderKho();if(CL.adm.audits)CL.adm.audits=CL.adm.audits.filter(x=>x.id!==a.id),renderAdmin()}catch(e){toast(e.message)}
+}
+function clMembersDialog(a){
+  const d=$('dlgClMem'),B=$('clMemB');$('clMemH').textContent=`Giao audit: ${a.vendor||'(chưa nhập đối tác)'} · ${vnDate(a.date)||''}`;
+  const cand=CL.users.filter(u=>u.role!=='viewer'&&u.active!==false&&u.id!==a.owner_id),sel=new Set(a.members||[]);
+  B.replaceChildren(h('p',{class:'hint'},'Người được giao sửa được audit này như người tạo. Quản trị viên luôn sửa được mọi audit.'),
+    h('label',{class:'srow'},'Người tạo (chủ sở hữu) ',h('select',{id:'clMemOwner'},...CL.users.filter(u=>u.role!=='viewer').map(u=>h('option',{value:u.id,selected:u.id===a.owner_id},`${u.name} (${ROLE_L[u.role]})`)))),
+    cand.length?h('div',{class:'clmem'},...cand.map(u=>h('label',{class:'chk'},h('input',{type:'checkbox',value:u.id,checked:sel.has(u.id)}),` ${u.name} · ${ROLE_L[u.role]}`))):h('p',{class:'hint'},'Chưa có Auditor nào khác. Thêm người dùng ở trang Quản trị.'));
+  $('clMemSave').onclick=async()=>{const ids=[...B.querySelectorAll('.clmem input:checked')].map(x=>x.value),own=$('clMemOwner').value;
+    try{if(own&&own!==a.owner_id)await api('PATCH','/api/audits/'+a.id,{owner_id:own});const r=await api('PUT',`/api/audits/${a.id}/members`,{members:ids.filter(x=>x!==own)});d.close();clKhoPatch(r.audit);if(CL.adm.audits){const i=CL.adm.audits.findIndex(x=>x.id===a.id);if(i>=0)CL.adm.audits[i]=r.audit}toast('Đã cập nhật phân quyền audit.');renderAdmin()}catch(e){toast(e.message)}};
+  d.showModal();
+}
+
+/* ---------- Quản trị: người dùng, phân quyền, cài đặt hệ thống, nhật ký ---------- */
+const ACT_L={login:'Đăng nhập',password:'Đổi mật khẩu',bootstrap:'Khởi tạo hệ thống','user.create':'Tạo người dùng','user.update':'Sửa người dùng','user.delete':'Xóa người dùng',settings:'Cài đặt hệ thống','audit.create':'Tạo audit','audit.delete':'Xóa audit','audit.lock':'Khóa audit','audit.unlock':'Mở khóa audit','audit.owner':'Đổi người tạo audit','audit.members':'Giao audit','sessions.revoke':'Đăng xuất mọi thiết bị'};
+async function renderAdmin(){
+  const P=$('adminB');if(!P)return;const A=CL.adm;
+  if(!clAdmin()){P.replaceChildren(h('div',{class:'dcard'},h('h3',null,'Không có quyền'),h('p',{class:'hint'},'Chỉ quản trị viên mở được trang này.')));return}
+  const tabs=h('div',{class:'stabs',role:'tablist'},...[['users','Người dùng'],['perm','Phân quyền audit'],['sys','Cài đặt hệ thống'],['log','Nhật ký']].map(([t,l])=>h('button',{role:'tab','aria-selected':String(A.tab===t),onclick:()=>{A.tab=t;renderAdmin()}},l)));
+  const st=A.stats;const cards=h('div',{class:'clstats'},...(st?[['Người dùng',`${st.active}/${st.users}`,'đang hoạt động'],['Đối tác',st.vendors,''],['Lần audit',st.audits,''],['Ảnh',st.photos,(st.bytes/1048576).toFixed(1)+' MB'],['Lỗi',st.findings,'']]:[['…','','']]).map(([a,b,c])=>h('div',{class:'dcard'},h('small',null,a),h('b',null,String(b)),c?h('small',null,c):null)));
+  if(!st)api('GET','/api/admin/stats').then(r=>{A.stats=r;renderAdmin()}).catch(()=>{});
+  let body;
+  if(A.tab==='users')body=clAdmUsers();else if(A.tab==='perm')body=clAdmPerm();else if(A.tab==='sys')body=clAdmSys();else body=clAdmLog();
+  P.replaceChildren(cards,tabs,body);
+}
+function clAdmUsers(){
+  const me=CL.auth.user.id;
+  const rows=CL.users.map(u=>h('tr',{class:u.active?'':'off'},h('td',null,h('b',null,u.name),u.id===me?h('small',null,' (bạn)'):null),h('td',null,u.email||''),
+    h('td',null,h('select',{'aria-label':'Vai trò',disabled:u.id===me,onchange:e=>clUserPatch(u,{role:e.target.value})},...Object.entries(ROLE_L).map(([r,l])=>h('option',{value:r,selected:u.role===r},l)))),
+    h('td',null,u.active?h('span',{class:'pill okc'},'Hoạt động'):h('span',{class:'pill Priority'},'Đã khóa')),h('td',null,u.last_login?vnDT(u.last_login):'Chưa đăng nhập'),
+    h('td',{class:'clact'},h('button',{class:'btn sm',onclick:()=>clUserDialog(u)},'Sửa'),h('button',{class:'btn sm',onclick:()=>clResetPw(u)},'Đặt lại MK'),
+      u.id===me?null:h('button',{class:'btn sm',onclick:()=>clUserPatch(u,{active:!u.active})},u.active?'Khóa':'Mở khóa'),
+      u.id===me?null:h('button',{class:'btn sm',onclick:async()=>{try{await api('POST','/api/admin/sessions/revoke',{user_id:u.id});toast(`Đã đăng xuất ${u.name} khỏi mọi thiết bị.`)}catch(e){toast(e.message)}}},'Đăng xuất'),
+      u.id===me?null:h('button',{class:'btn sm danger',onclick:()=>clUserDel(u)},'Xóa'))));
+  return h('div',null,h('div',{class:'dhead'},h('h2',null,'Người dùng'),h('span',{class:'spacer'}),h('button',{class:'btn primary',onclick:()=>clUserDialog(null)},'+ Thêm người dùng')),
+    h('div',{class:'tscroll'},h('table',{class:'ftab cltab'},h('thead',null,h('tr',null,...['Họ tên','Email','Vai trò','Trạng thái','Đăng nhập gần nhất',''].map(t=>h('th',null,t)))),h('tbody',null,...rows))),
+    h('div',{class:'sgrid clroles'},...Object.entries(ROLE_L).map(([r,l])=>h('div',{class:'dcard'},h('h3',null,l),h('p',{class:'hint'},ROLE_D[r])))));
+}
+async function clUserPatch(u,ch){
+  if(ch.active===false){const v=await ask(`Khóa tài khoản ${u.name}?`,'Người này bị đăng xuất ngay và không đăng nhập được cho tới khi mở khóa.',[{label:'Khóa',cls:'danger',v:'go'},{label:'Hủy',v:null}]);if(v!=='go')return}
+  try{const r=await api('PATCH','/api/users/'+u.id,ch);Object.assign(u,r.user);toast('Đã cập nhật '+u.name+'.')}catch(e){toast(e.message)}await clUsers();renderAdmin();
+}
+async function clUserDel(u){
+  const v=await ask(`Xóa tài khoản ${u.name}?`,'Các audit do người này tạo được chuyển cho bạn. Không hoàn tác được.',[{label:'Xóa tài khoản',cls:'danger',v:'go'},{label:'Hủy',v:null}]);if(v!=='go')return;
+  try{await api('DELETE','/api/users/'+u.id);toast('Đã xóa '+u.name+'.');CL.adm.stats=null}catch(e){toast(e.message)}await clUsers();renderAdmin();
+}
+async function clResetPw(u){
+  const pw=clGenPw();const v=await ask(`Đặt lại mật khẩu cho ${u.name}?`,`Mật khẩu tạm mới: ${pw}\nGửi mật khẩu này cho ${u.name} qua kênh riêng. Lần đăng nhập tới họ phải đổi mật khẩu; mọi thiết bị đang đăng nhập bị đăng xuất.`,[{label:'Đặt lại',cls:'primary',v:'go'},{label:'Hủy',v:null}]);if(v!=='go')return;
+  try{await api('PATCH','/api/users/'+u.id,{password:pw});try{await navigator.clipboard.writeText(pw);toast('Đã đặt lại và chép mật khẩu tạm vào bộ nhớ: '+pw)}catch{toast('Đã đặt lại. Mật khẩu tạm: '+pw)}}catch(e){toast(e.message)}
+}
+function clUserDialog(u){
+  const d=$('dlgClUser');$('clUH').textContent=u?'Sửa người dùng':'Thêm người dùng';$('clUName').value=u?u.name:'';$('clUEmail').value=u?u.email:'';$('clURole').value=u?u.role:'auditor';
+  $('clUPw').value=u?'':clGenPw();$('clUPwRow').hidden=!!u;$('clUMsg').textContent='';
+  $('clUSave').onclick=async e=>{e.preventDefault();const b={name:$('clUName').value.trim(),email:$('clUEmail').value.trim(),role:$('clURole').value};
+    try{if(u){await api('PATCH','/api/users/'+u.id,b);toast('Đã lưu.')}else{b.password=$('clUPw').value;await api('POST','/api/users',b);
+        const msg=`Đã tạo tài khoản ${b.email}. Mật khẩu tạm: ${b.password}`;try{await navigator.clipboard.writeText(`Audit RBA: ${location.origin+location.pathname}\nEmail: ${b.email}\nMật khẩu tạm: ${b.password}`);toast(msg+' (đã chép thông tin đăng nhập)')}catch{toast(msg)}CL.adm.stats=null}
+      d.close();await clUsers();renderAdmin()}catch(er){$('clUMsg').textContent=er.message}};
+  d.showModal();
+}
+function clAdmPerm(){
+  const A=CL.adm;if(!A.audits){api('GET','/api/audits').then(r=>{A.audits=r.audits||[];renderAdmin()}).catch(e=>toast(e.message));return h('p',{class:'hint'},'Đang tải danh sách audit…')}
+  const q=(A.pq||'').toLowerCase(),list=A.audits.filter(a=>!q||[a.vendor,a.owner_name,a.auditors].some(x=>String(x||'').toLowerCase().includes(q)));
+  return h('div',null,h('div',{class:'dhead'},h('h2',null,'Phân quyền audit'),h('span',{class:'spacer'}),h('input',{type:'search',placeholder:'Tìm đối tác, người tạo…',value:A.pq||'',oninput:e=>{A.pq=e.target.value;clearTimeout(A.pt);A.pt=setTimeout(()=>{renderAdmin();const i=document.querySelector('#adminB input[type=search]');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}},250)}}),h('button',{class:'btn',onclick:()=>{A.audits=null;renderAdmin()}},'Làm mới')),
+    h('p',{class:'hint'},'Người tạo và người được giao sửa được audit; mọi người đăng nhập đều xem được. Audit đã khóa chỉ quản trị viên sửa.'),
+    h('div',{class:'tscroll'},h('table',{class:'ftab cltab'},h('thead',null,h('tr',null,...['Đối tác','Ngày','Ảnh / lỗi','Người tạo','Được giao','Trạng thái',''].map(t=>h('th',null,t)))),
+      h('tbody',null,...list.map(a=>h('tr',null,h('td',null,h('b',null,a.vendor||'(chưa nhập)')),h('td',null,vnDate(a.date)||'—'),h('td',null,`${a.n_photos} / ${a.n_f}`),h('td',null,a.owner_name||'—'),
+        h('td',null,(a.members||[]).map(clName).filter(Boolean).join(', ')||'—'),h('td',null,a.status==='locked'?h('span',{class:'pill Minor'},'Đã khóa'):h('span',{class:'pill okc'},'Đang mở')),
+        h('td',{class:'clact'},h('button',{class:'btn sm',onclick:()=>clMembersDialog(a)},'Giao người'),h('button',{class:'btn sm',onclick:async()=>{await clLock(a);A.audits=null;renderAdmin()}},a.status==='locked'?'Mở khóa':'Khóa'),h('button',{class:'btn sm danger',onclick:()=>clDelAudit(a)},'Xóa'))))))));
+}
+function clAdmSys(){
+  const s={sessionDays:30,lockCrit:false,auditorDelete:false,org:'',defaultSub:'',...CL.sys};
+  const inp=(id,lab,val,typ,extra)=>h('label',{class:'srow'},lab,h('input',{id,type:typ||'text',value:val==null?'':val,...(extra||{})}));
+  const cfg=s.cfg;
+  return h('div',{class:'sgrid'},
+    h('div',{class:'dcard'},h('h3',null,'Thông tin chung'),inp('csOrg','Tên đơn vị (hiện trên đầu app)',s.org,'text',{style:'width:100%'}),inp('csSub','Subsidiary mặc định cho audit mới',s.defaultSub,'text',{placeholder:'SEV/T'}),
+      inp('csDays','Thời hạn đăng nhập (ngày)',s.sessionDays,'number',{min:1,max:365})),
+    h('div',{class:'dcard'},h('h3',null,'Quyền'),
+      h('label',{class:'chk'},h('input',{type:'checkbox',id:'csLock',checked:!!s.lockCrit}),' Khóa tiêu chí đánh giá: mọi máy dùng chung tiêu chí chuẩn bên dưới, chỉ quản trị viên được sửa.'),
+      h('label',{class:'chk'},h('input',{type:'checkbox',id:'csDel',checked:!!s.auditorDelete}),' Auditor được xóa audit do mình tạo (khi chưa khóa).'),
+      h('p',{class:'hint'},'Người xem luôn chỉ xem. Auditor chỉ sửa audit mình tạo hoặc được giao. Máy chủ kiểm tra quyền ở mọi thao tác, sửa trên máy không vượt được quyền.')),
+    h('div',{class:'dcard'},h('h3',null,'Tiêu chí chuẩn của hệ thống'),
+      h('p',{class:'stat'},cfg?`Mức theo danh mục: ${cfg.sevLock?'có':'không'} · Mandatory theo Priority: ${cfg.mandRule!=='ai'?'có':'không'} · Viết khắc phục: ${cfg.fixes?'có':'không'} · Độ chắc chắn tối thiểu ${cfg.minConf}% · Hạn: Priority ${cfg.due.Priority} ngày, Major ${cfg.due.Major}, Minor ${cfg.due.Minor}.`:'Chưa đặt. Các máy dùng tiêu chí riêng.'),
+      h('button',{class:'btn',onclick:()=>{CL.sys={...CL.sys,cfg:{sevLock:CFG.sevLock,mandRule:CFG.mandRule,fixes:CFG.fixes,minConf:CFG.minConf,due:{...CFG.due}}};renderAdmin();toast('Đã lấy tiêu chí trên máy này. Bấm Lưu cài đặt để áp dụng cho cả hệ thống.')}},'Dùng tiêu chí đang đặt trên máy này'),
+      h('p',{class:'hint'},'Sửa tiêu chí ở Cài đặt → Tiêu chí & thời hạn, rồi quay lại bấm nút trên.')),
+    h('div',{class:'dcard'},h('h3',null,'Lưu'),h('button',{class:'btn primary wide',onclick:clSysSave},'Lưu cài đặt hệ thống'),h('p',{class:'hint'},'Các máy nhận cài đặt mới khi mở lại app hoặc đăng nhập lại.')));
+}
+async function clSysSave(){
+  const v={...CL.sys,org:$('csOrg').value.trim(),defaultSub:$('csSub').value.trim(),sessionDays:Math.max(1,Math.min(365,+$('csDays').value||30)),lockCrit:$('csLock').checked,auditorDelete:$('csDel').checked};
+  if(v.lockCrit&&!v.cfg)v.cfg={sevLock:CFG.sevLock,mandRule:CFG.mandRule,fixes:CFG.fixes,minConf:CFG.minConf,due:{...CFG.due}};
+  try{await api('PUT','/api/kv/sys',v);CL.sys=v;clLS('sys',v);clApplySys();toast('Đã lưu cài đặt hệ thống.');renderAdmin()}catch(e){toast(e.message)}
+}
+function clAdmLog(){
+  const A=CL.adm;if(!A.log){api('GET','/api/admin/log').then(r=>{A.log=r.log||[];renderAdmin()}).catch(e=>toast(e.message));return h('p',{class:'hint'},'Đang tải nhật ký…')}
+  return h('div',null,h('div',{class:'dhead'},h('h2',null,'Nhật ký hoạt động'),h('span',{class:'spacer'}),h('button',{class:'btn',onclick:()=>{A.log=null;renderAdmin()}},'Làm mới')),
+    h('div',{class:'tscroll'},h('table',{class:'ftab cltab'},h('thead',null,h('tr',null,...['Thời gian','Người thực hiện','Thao tác','Đối tượng','Chi tiết'].map(t=>h('th',null,t)))),
+      h('tbody',null,...A.log.map(l=>h('tr',null,h('td',null,vnDT(l.at)),h('td',null,l.user_name||l.user_email||'—'),h('td',null,ACT_L[l.action]||l.action),h('td',null,l.target||''),h('td',null,l.detail||'')))))));
+}
+
+/* ---------- Cài đặt → Tài khoản ---------- */
+function renderAcct(){
+  const C=$('setAcct');if(!C)return;
+  if(!API){C.replaceChildren(h('h3',null,'Tài khoản'),h('p',{class:'hint'},'Bản này chưa nối máy chủ online.'));return}
+  if(!clOn()){C.replaceChildren(h('h3',null,'Tài khoản'),h('p',{class:'hint'},'Chưa đăng nhập.'),h('button',{class:'btn primary',onclick:()=>clGate(true)},'Đăng nhập'));return}
+  const u=CL.auth.user,a=CL.audit;
+  C.replaceChildren(h('h3',null,'Tài khoản'),
+    h('p',{class:'stat'},h('b',null,u.name),h('br'),u.email,h('br'),'Vai trò: ',h('span',{class:'pill '+(u.role==='admin'?'Priority':u.role==='auditor'?'okc':'Minor')},ROLE_L[u.role])),
+    h('p',{class:'hint'},ROLE_D[u.role]),
+    h('div',{class:'g2'},h('button',{class:'btn',onclick:()=>clPwDialog(false)},'Đổi mật khẩu'),h('button',{class:'btn',onclick:async()=>{const n=clQN();if(n){const v=await ask('Đăng xuất?',`Còn ${n} ảnh chưa lưu online. Dữ liệu vẫn giữ trên máy và tự lưu khi bạn đăng nhập lại.`,[{label:'Đăng xuất',cls:'danger',v:'go'},{label:'Hủy',v:null}]);if(v!=='go')return}clLogout()}},'Đăng xuất')),
+    h('button',{class:'btn danger wide',onclick:clLogoutWipe},'Đăng xuất và xóa dữ liệu trên máy'),
+    h('h3',null,'Lưu trữ online'),
+    h('p',{class:'stat',id:'clSyncStat'}),
+    h('p',{class:'hint'},a?`Audit đang mở: ${a.vendor||'(chưa nhập đối tác)'}${a.date?' · '+vnDate(a.date):''} · người tạo ${a.owner_name||'—'} · ${a.can_edit?'bạn được sửa':'chỉ xem'}.`:'Audit trên máy chưa lưu online. App tự tạo khi có ảnh.'),
+    h('div',{class:'g2'},h('button',{class:'btn',onclick:()=>{clSync();toast('Đang đồng bộ…')}},'Đồng bộ ngay'),h('button',{class:'btn',onclick:()=>clGo('cloud')},'Mở Kho audit')),
+    u.role==='admin'?h('div',{class:'cladm'},h('h3',null,'Quyền quản trị'),h('p',{class:'hint'},'Quản lý người dùng, phân quyền audit, cài đặt hệ thống và nhật ký hoạt động.'),h('button',{class:'btn primary wide',onclick:()=>clGo('admin')},'Mở trang Quản trị')):null);
+  clStatus();
+}
+
+/* ---------- gắn vào giao diện ---------- */
+DVS.push('cloud','admin');
+{const _sd=setDView;setDView=function(v){if(v==='admin'&&!clAdmin())v='dash';_sd(v);if(v==='cloud')renderKho();if(v==='admin')renderAdmin()}}
+{const _sv=setView;setView=function(v){if(!isMobile()&&(v==='cloud'||v==='admin'))return setDView(v);if(v==='admin'&&!clAdmin())v='review';_sv(v);if(v==='cloud')renderKho();if(v==='admin')renderAdmin();if(v==='set')renderAcct()}}
+{const _rs=renderSettings;renderSettings=function(){_rs();renderAcct();clApplySys();const t=$('setAbout');if(t&&API)t.textContent=t.textContent.replace('Ảnh và dữ liệu chỉ lưu trên máy này','Ảnh và dữ liệu lưu trên máy và tự đồng bộ lên hệ thống online')}}
+if(API){
+  $('clUser').onclick=()=>{openSettings();setTab('acct');renderAcct()};
+  $('clRoGo').onclick=()=>clGo('cloud');
+  $('clForm').addEventListener('submit',clLogin);$('clPwForm').addEventListener('submit',clPwSave);$('clPwCancel').onclick=()=>$('dlgClPw').close();
+  $('dlgClPw').addEventListener('cancel',e=>{if($('dlgClPw').dataset.force)e.preventDefault()});
+  $('clUCancel').onclick=()=>$('dlgClUser').close();$('clMemCancel').onclick=()=>$('dlgClMem').close();$('clUGen').onclick=()=>{$('clUPw').value=clGenPw()};
+  $('btnKho').onclick=()=>clGo('cloud');
+  document.querySelectorAll('#setTabs>button[data-st="acct"]').forEach(b=>b.onclick=()=>{setTab('acct');renderAcct()});
+  addEventListener('online',()=>clSoon(1500));
+  setInterval(()=>{if(!document.hidden&&clOn())clSync()},45000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&clOn())clSoon(1000)});
+  if(!clOn())clGate(true);else{const l=clLS('lastuser');if(CL.auth.user&&$('clEmail'))$('clEmail').value=CL.auth.user.email}
+  clApply();
+}else{document.querySelectorAll('.clonly').forEach(el=>el.hidden=true)}
 
 /* ---------- Khởi động ---------- */
 (async()=>{

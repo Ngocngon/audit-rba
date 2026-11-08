@@ -9,8 +9,10 @@ ALLOWED_ORIGINS = "https://ngocngon.github.io"
 [[d1_databases]]
 binding = "DB"
 database_name = "audit-rba"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "292f0891-089b-46b6-9982-f9ab0e39174a"
 
-[[r2_buckets]]
-binding = "IMG"
-bucket_name = "audit-rba-images"
+# Bật R2 (tùy chọn): bỏ dấu # ba dòng dưới, tạo bucket bằng `npx wrangler r2 bucket create audit-rba-images`.
+# Không có R2 thì ảnh được lưu trong D1.
+# [[r2_buckets]]
+# binding = "IMG"
+# bucket_name = "audit-rba-images"

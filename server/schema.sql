@@ -81,3 +81,12 @@ CREATE TABLE IF NOT EXISTS log (
   detail TEXT
 );
 CREATE INDEX IF NOT EXISTS log_at ON log(at);
+
+-- Ảnh gốc khi không dùng R2 (mỗi ảnh tối đa ~1,9 MB, app tự nén trước khi gửi)
+CREATE TABLE IF NOT EXISTS imgs (
+  audit_id TEXT NOT NULL,
+  id TEXT NOT NULL,
+  ct TEXT,
+  data BLOB,
+  PRIMARY KEY (audit_id, id)
+);

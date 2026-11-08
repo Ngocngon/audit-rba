@@ -65,6 +65,15 @@ async function clPwSave(e){
   try{await api('POST','/api/me/password',{old:o,new:n});CL.auth.user.must_change=false;clLS('auth',CL.auth);$('dlgClPw').dataset.force='';$('dlgClPw').close();toast('Đã đổi mật khẩu.')}catch(er){m.textContent=er.message}
 }
 
+/* ảnh lớn được nén lại trước khi lưu online (máy chủ nhận tối đa ~1,9 MB/ảnh) */
+async function clShrink(blob){
+  if(!blob||blob.size<=1800000)return blob;
+  try{const bm=await createImageBitmap(blob);let side=2560,q=.86,out=blob;
+    for(let i=0;i<6&&out.size>1800000;i++){const k=Math.min(1,side/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
+      out=await new Promise(r=>c.toBlob(r,'image/jpeg',q))||out;side=Math.round(side*.82);q=Math.max(.7,q-.04)}
+    try{bm.close()}catch{}return out}catch{return blob}
+}
+
 /* ---------- khởi động phần online ---------- */
 async function clBoot(fresh){
   clApply();if(!clOn())return;
@@ -133,7 +142,7 @@ async function clSync(){
     }else if(CL.metaDirty){const r=await api('PATCH','/api/audits/'+CL.audit.id,clMeta());CL.audit=r.audit;clLS('audit',CL.audit);CL.metaDirty=false}
     const id=CL.audit.id;
     for(const pid of[...CL.q.del]){await api('DELETE',`/api/audits/${id}/photos/${pid}`).catch(e=>{if(e.status!==404)throw e});CL.q.del.delete(pid);clSaveQ()}
-    await pool([...CL.q.img],3,async pid=>{const p=S.photos.find(x=>x.id===pid);if(p&&p.blob)await api('PUT',`/api/audits/${id}/photos/${pid}/img`,p.blob);CL.q.img.delete(pid);clSaveQ();clStatus()});
+    await pool([...CL.q.img],3,async pid=>{const p=S.photos.find(x=>x.id===pid);if(p&&p.blob)await api('PUT',`/api/audits/${id}/photos/${pid}/img`,await clShrink(p.blob));CL.q.img.delete(pid);clSaveQ();clStatus()});
     await pool([...CL.q.data],4,async pid=>{const p=S.photos.find(x=>x.id===pid);if(p&&!p.sample)await api('PUT',`/api/audits/${id}/photos/${pid}`,clData(p),{ok409:true});CL.q.data.delete(pid);clSaveQ();clStatus()});
     await clPull();
   }catch(e){CL.err=e.message;if(e.status===403||e.status===410||e.status===404){try{const r=await api('GET','/api/audits/'+CL.audit.id);CL.audit=r.audit;clLS('audit',CL.audit)}catch(e2){if(e2.status===404){CL.audit=null;clLS('audit',null)}}clApply();toast(e.message)}else if(!e.net)console.warn(e);setTimeout(clSync,30000)}
