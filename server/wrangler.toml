@@ -1,0 +1,16 @@
+name = "audit-rba-api"
+main = "src/index.js"
+compatibility_date = "2025-10-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://ngocngon.github.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "audit-rba"
+database_id = "00000000-0000-0000-0000-000000000000"
+
+[[r2_buckets]]
+binding = "IMG"
+bucket_name = "audit-rba-images"
