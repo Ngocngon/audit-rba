@@ -90,3 +90,16 @@ CREATE TABLE IF NOT EXISTS imgs (
   data BLOB,
   PRIMARY KEY (audit_id, id)
 );
+
+-- Quyết định của người đánh giá với đề xuất của AI (để đo độ chính xác theo mã lỗi)
+CREATE TABLE IF NOT EXISTS ai_events (
+  id TEXT PRIMARY KEY,
+  at INTEGER NOT NULL,
+  user_id TEXT,
+  audit_id TEXT,
+  t TEXT NOT NULL,          -- keep | fix | reject | unclear | miss
+  code TEXT, sev TEXT,      -- mã và mức độ cuối cùng
+  from_code TEXT, from_sev TEXT, -- mã và mức độ AI đề xuất (khi sửa)
+  area TEXT, title TEXT, model TEXT
+);
+CREATE INDEX IF NOT EXISTS ai_events_at ON ai_events(at);

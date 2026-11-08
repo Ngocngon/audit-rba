@@ -303,11 +303,11 @@ const ACT_L={login:'Đăng nhập',password:'Đổi mật khẩu',bootstrap:'Kh�
 async function renderAdmin(){
   const P=$('adminB');if(!P)return;const A=CL.adm;
   if(!clAdmin()){P.replaceChildren(h('div',{class:'dcard'},h('h3',null,'Không có quyền'),h('p',{class:'hint'},'Chỉ quản trị viên mở được trang này.')));return}
-  const tabs=h('div',{class:'stabs',role:'tablist'},...[['users','Người dùng'],['perm','Phân quyền audit'],['sys','Cài đặt hệ thống'],['log','Nhật ký']].map(([t,l])=>h('button',{role:'tab','aria-selected':String(A.tab===t),onclick:()=>{A.tab=t;renderAdmin()}},l)));
+  const tabs=h('div',{class:'stabs',role:'tablist'},...[['users','Người dùng'],['perm','Phân quyền audit'],['sys','Cài đặt hệ thống'],['ai','Độ chính xác AI'],['log','Nhật ký']].map(([t,l])=>h('button',{role:'tab','aria-selected':String(A.tab===t),onclick:()=>{A.tab=t;renderAdmin()}},l)));
   const st=A.stats;const cards=h('div',{class:'clstats'},...(st?[['Người dùng',`${st.active}/${st.users}`,'đang hoạt động'],['Đối tác',st.vendors,''],['Lần audit',st.audits,''],['Ảnh',st.photos,(st.bytes/1048576).toFixed(1)+' MB'],['Lỗi',st.findings,'']]:[['…','','']]).map(([a,b,c])=>h('div',{class:'dcard'},h('small',null,a),h('b',null,String(b)),c?h('small',null,c):null)));
   if(!st)api('GET','/api/admin/stats').then(r=>{A.stats=r;renderAdmin()}).catch(()=>{});
   let body;
-  if(A.tab==='users')body=clAdmUsers();else if(A.tab==='perm')body=clAdmPerm();else if(A.tab==='sys')body=clAdmSys();else body=clAdmLog();
+  if(A.tab==='users')body=clAdmUsers();else if(A.tab==='perm')body=clAdmPerm();else if(A.tab==='sys')body=clAdmSys();else if(A.tab==='ai')body=typeof clAdmAI==='function'?clAdmAI():h('p',{class:'hint'},'Chưa có mô-đun AI.');else body=clAdmLog();
   P.replaceChildren(cards,tabs,body);
 }
 function clAdmUsers(){

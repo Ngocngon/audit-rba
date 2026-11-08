@@ -495,6 +495,71 @@ on('POST', '/api/admin/sessions/revoke', async (req, env, u) => {
   return json({ ok: true });
 }, true);
 
+/* ---------- AI: học chung cả đội và thống kê độ chính xác ---------- */
+const normT = s => String(s || '').toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+const wordsOf = s => new Set(normT(s).split(' ').filter(w => w.length > 2));
+
+// Lỗi đã được người đánh giá xác nhận trên mọi audit, ưu tiên cùng khu vực và cùng đối tác
+on('GET', '/api/ai/examples', async (req, env, u) => {
+  const url = new URL(req.url);
+  const area = str(url.searchParams.get('area'), 200), vendor = str(url.searchParams.get('vendor'), 200), hint = str(url.searchParams.get('q'), 300);
+  const n = Math.min(40, Math.max(5, Number(url.searchParams.get('n')) || 24));
+  const rows = await all(env, `SELECT p.area, p.data, a.vendor, a.date FROM photos p JOIN audits a ON a.id=p.audit_id
+    WHERE p.deleted=0 AND a.deleted=0 AND p.n_ok>0 ORDER BY p.srv DESC LIMIT 600`);
+  const ctx = wordsOf(`${area} ${hint}`), V = normT(vendor);
+  const seen = new Map();
+  for (const r of rows) {
+    let d; try { d = JSON.parse(r.data || '{}'); } catch { continue; }
+    const aw = wordsOf(r.area);
+    for (const f of Array.isArray(d.findings) ? d.findings : []) {
+      if (!f || !f.ok || !String(f.title || '').trim()) continue;
+      const key = normT(f.title).slice(0, 90);
+      let s = 0;
+      for (const w of wordsOf(`${f.title} ${r.area}`)) if (ctx.has(w)) s += 3;
+      for (const w of aw) if (ctx.has(w)) s += 2;
+      if (V && normT(r.vendor) === V) s += 4;
+      if (f.src === 'ai' && f.ai0 && (f.ai0.code !== f.code || f.ai0.sev !== f.sev)) s += 2; // lỗi AI từng gán sai: bài học quý
+      const old = seen.get(key);
+      if (old) { old.n++; old.s = Math.max(old.s, s) + 0.5; continue; }
+      seen.set(key, { s, n: 1, title: str(f.title, 220), code: f.code || '', req: f.req || '', sev: f.sev || '', kind: f.kind || '',
+        fixNow: str(f.fixNow, 160), fixRoot: str(f.fixRoot, 200), area: str(r.area, 60), vendor: V && normT(r.vendor) === V,
+        from: f.src === 'ai' && f.ai0 && (f.ai0.code !== f.code || f.ai0.sev !== f.sev) ? { code: f.ai0.code || '', sev: f.ai0.sev || '' } : null });
+    }
+  }
+  const list = [...seen.values()].sort((a, b) => b.s - a.s || b.n - a.n).slice(0, n);
+  return json({ examples: list });
+}, true);
+
+// Ghi nhận quyết định của người đánh giá với đề xuất của AI (giữ, sửa, loại, không rõ, bỏ sót)
+on('POST', '/api/ai/events', async (req, env, u) => {
+  need(u, 'admin', 'auditor');
+  const b = await body(req);
+  const ev = (Array.isArray(b.events) ? b.events : []).slice(0, 200);
+  const T = ['keep', 'fix', 'reject', 'unclear', 'miss'];
+  const stmts = [];
+  for (const e of ev) {
+    if (!e || !T.includes(e.t)) continue;
+    stmts.push(env.DB.prepare('INSERT OR IGNORE INTO ai_events(id,at,user_id,audit_id,t,code,sev,from_code,from_sev,area,title,model) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
+      .bind(okId(e.id) ? e.id : rid(16), Number(e.at) || now(), u.id, str(e.audit_id, 40), e.t, str(e.code, 20), str(e.sev, 12), str(e.from_code, 20), str(e.from_sev, 12), str(e.area, 100), str(e.title, 200), str(e.model, 60)));
+  }
+  if (stmts.length) await env.DB.batch(stmts);
+  return json({ ok: true, n: stmts.length });
+}, true);
+
+on('GET', '/api/admin/ai-stats', async (req, env, u) => {
+  need(u, 'admin');
+  const days = Math.min(3650, Math.max(1, Number(new URL(req.url).searchParams.get('days')) || 90));
+  const since = now() - days * 86400000;
+  const [tot, byCode, changes, byModel, recent] = await Promise.all([
+    all(env, 'SELECT t, COUNT(*) AS n FROM ai_events WHERE at>=? GROUP BY t', since),
+    all(env, `SELECT CASE WHEN t IN ('fix') THEN from_code ELSE code END AS c, t, COUNT(*) AS n FROM ai_events WHERE at>=? GROUP BY c, t`, since),
+    all(env, `SELECT from_code, from_sev, code, sev, COUNT(*) AS n FROM ai_events WHERE at>=? AND t='fix' GROUP BY from_code, from_sev, code, sev ORDER BY n DESC LIMIT 15`, since),
+    all(env, `SELECT model, t, COUNT(*) AS n FROM ai_events WHERE at>=? AND model<>'' GROUP BY model, t`, since),
+    all(env, `SELECT e.at, e.t, e.code, e.sev, e.from_code, e.from_sev, e.area, e.title, u.name AS user_name FROM ai_events e LEFT JOIN users u ON u.id=e.user_id WHERE e.at>=? AND e.t IN ('fix','reject','miss') ORDER BY e.at DESC LIMIT 40`, since),
+  ]);
+  return json({ days, totals: tot, by_code: byCode, changes, by_model: byModel, recent });
+}, true);
+
 /* ---------- vào ---------- */
 export default {
   async fetch(req, env) {

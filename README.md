@@ -11,7 +11,7 @@ App soát ảnh hiện trường EHS theo RBA Guider 8.0.1: AI khoanh vùng và 
 |---|---|
 | `docs/` | Bản cài web (PWA) đang chạy trên GitHub Pages |
 | `server/` | Máy chủ Cloudflare Workers + cơ sở dữ liệu D1 (`schema.sql`, `src/index.js`, `wrangler.toml`) |
-| `source/` | Gói mã nguồn gốc v1.1 + lớp online (`3-cong-cu-dung/cloud/`, `patch_cloud.py`) |
+| `source/` | Gói mã nguồn gốc v1.1 + lớp online (`3-cong-cu-dung/cloud/`, `patch_cloud.py`) + lớp nâng cao AI (`3-cong-cu-dung/ai/`, `patch_ai.py`) |
 
 ## Phân vùng và quyền
 
@@ -22,6 +22,16 @@ App soát ảnh hiện trường EHS theo RBA Guider 8.0.1: AI khoanh vùng và 
   - **Người xem:** chỉ xem và tải báo cáo, không sửa được dữ liệu online.
 - Mất mạng vẫn dùng trên máy như bình thường; có mạng tự đồng bộ lên Kho audit.
 
+## Nâng cao độ chính xác AI (v1.4)
+
+- Danh sách kiểm tra theo khu vực (13 loại khu vực), quy tắc chọn mã RBA và mốc mức độ Priority/Major/Minor đưa vào lời nhắc.
+- Mẫu khắc phục theo thứ bậc biện pháp kiểm soát, kèm bộ phận phụ trách và hạn theo mức độ (Priority: trong ca, Major: 7 ngày, Minor: 30 ngày).
+- Học từ lỗi cả đội đã xác nhận trên máy chủ (`/api/ai/examples`), ưu tiên cùng khu vực, cùng đối tác.
+- AI tự kiểm tra lại: phóng to từng lỗi, giữ/sửa/loại, bổ sung lỗi bỏ sót rõ ràng (thêm 1 lượt gọi mỗi ảnh, không áp dụng chế độ Nhanh).
+- Kết quả ổn định (temperature thấp, seed cố định cho Gemini 1.x/2.x), ảnh độ phân giải cao.
+- Tab **Quản trị → Độ chính xác AI**: thống kê giữ/sửa/loại/bỏ sót theo mã, theo model.
+- Bật tắt: Cài đặt hệ thống → AI soát ảnh → Nâng cao độ chính xác.
+
 ## Phát hành bản mới
 
 ```bash
@@ -31,6 +41,7 @@ python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/ind
 python3 3-cong-cu-dung/pwa_assets.py out 1.4 3-cong-cu-dung/logo.webp
 cp 3-cong-cu-dung/_headers out/
 python3 3-cong-cu-dung/patch_cloud.py out/index.html https://audit-rba-api.likiop00.workers.dev
+python3 3-cong-cu-dung/patch_ai.py out/index.html
 cd .. && rm -rf docs/* && cp -r source/out/. docs/ && touch docs/.nojekyll && rm -rf source/out
 git add -A && git commit -m "v1.4" && git push
 ```
