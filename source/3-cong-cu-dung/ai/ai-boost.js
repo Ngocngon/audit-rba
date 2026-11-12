@@ -182,9 +182,11 @@ Chỉ trả về một JSON:
   API_SAMPLE.json=async(i,o={})=>{
     if(o.__aixInner||typeof i!=='string'||!/DANH MỤC LỖI/.test(i))return _json(i,o);
     const p=o.images&&o.images[0]?BLOBP.get(o.images[0]):null;
-    const prompt=await augment(i,p);
-    const d=await _json(prompt,o);
-    return /\nNHIỆM VỤ\nSoát ảnh hiện trường/.test(i)?verifyWhole(prompt,o,d,p):d;
+    const whole=/\nNHIỆM VỤ\nSoát ảnh hiện trường/.test(i),Q=typeof qxPrompt==='function';
+    const prompt=await augment(whole&&Q?qxPrompt(i):i,p);
+    let d=await _json(prompt,o);
+    if(whole&&Q)d=qxGround(d);
+    return whole?verifyWhole(prompt,o,d,p):d;
   }}
 
 /* ---------- 5. Ghi nhận quyết định để thống kê độ chính xác ---------- */

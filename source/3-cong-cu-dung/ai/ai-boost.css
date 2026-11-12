@@ -11,3 +11,26 @@
 .aixhd{flex-wrap:wrap}
 .aixhd h2{white-space:nowrap}
 .aixhd select{width:auto!important;flex:0 0 auto!important;min-width:120px}
+/* Kiểm soát chất lượng (v1.5) */
+.qxdup{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.qxdup figure{margin:0;display:grid;gap:4px;text-align:center}
+.qxdup img{width:100%;max-height:180px;object-fit:contain;border-radius:8px;background:#0001;border:1px solid var(--line,#e3e7ea)}
+.qxdup figcaption{font-size:12.5px;color:var(--muted,#5b6670)}
+.qxgrp{border:1px solid var(--line,#e3e7ea);border-left:4px solid var(--ac,#00558f);border-radius:10px;background:var(--panel,#fff);padding:10px 12px;margin:0 0 12px;display:grid;gap:10px}
+.qxgrp>summary{cursor:pointer;line-height:1.5}
+.qxgrp>summary small{color:var(--muted,#5b6670)}
+.qxg1{border-top:1px solid var(--line,#e3e7ea);padding-top:10px;display:grid;gap:6px}
+.qxgh{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.qxgh .spacer{flex:1}
+.qxgh small,.qxga{color:var(--muted,#5b6670);font-size:12.5px}
+.qxgl{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.qxgi{flex:none;width:112px;display:grid;gap:3px;border:1px solid var(--line,#e3e7ea);border-radius:8px;padding:4px}
+.qxgi.rep{border-color:var(--ac,#00558f);box-shadow:0 0 0 1px var(--ac,#00558f)}
+.qxgi.ok{background:color-mix(in srgb,#1a7f37 8%,transparent)}
+.qxgi img{width:100%;height:70px;object-fit:cover;border-radius:5px;cursor:pointer}
+.qxgi small{font-size:11.5px;color:var(--muted,#5b6670)}
+.qxgb{display:flex;gap:4px}.qxgb .btn{flex:1;padding:2px 4px;font-size:11.5px;min-height:0}
+.qxgf{display:flex;gap:6px;flex-wrap:wrap}
+.qxtags{display:inline-flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tag.qxg{background:color-mix(in srgb,var(--ac,#00558f) 14%,transparent);color:var(--ac,#00558f)}
+.tag.qxfx{background:#fff4d6;color:#7a5200}
