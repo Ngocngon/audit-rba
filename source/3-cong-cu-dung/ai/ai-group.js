@@ -131,7 +131,7 @@ const QXC=new Map();
 function gxMode(g){const x=g.items.find(x=>x.f.qxMode);return x?x.f.qxMode:(QX.cfg.groupImg||'collage')}
 function gxSetMode(g,m){for(const x of g.items){x.f.qxMode=m;Store.touch(x.p)}toast(m==='collage'?'Nhóm này xuất bằng ảnh ghép các vị trí.':'Nhóm này xuất bằng ảnh đại diện.');qxRefresh()}
 const gxOrder=g=>[g.rep,...g.items.filter(x=>x!==g.rep)];
-function gxSig(g){return g.k+'|'+g.sev+'|'+gxOrder(g).map(x=>{const b=bbox(x.f.s);return[x.p.id,x.f.id,x.p.w,x.p.h,x.pi,(x.p.area||'').trim(),b.x.toFixed(3),b.y.toFixed(3),b.w.toFixed(3),b.h.toFixed(3)].join(':')}).join(',')}
+function gxSig(g){const LL=capLang();return g.k+'|'+g.sev+'|'+LL+'|'+(LL!=='vi'?[...new Set(g.items.map(x=>capOf(LL,x.p.area)))].join('~')+'|':'')+gxOrder(g).map(x=>{const b=bbox(x.f.s);return[x.p.id,x.f.id,x.p.w,x.p.h,x.pi,(x.p.area||'').trim(),b.x.toFixed(3),b.y.toFixed(3),b.w.toFixed(3),b.h.toFixed(3)].join(':')}).join(',')}
 async function gxCollage(g){
   await fonts();
   const its=gxOrder(g),show=its.slice(0,4),more=its.length-show.length,n=show.length;
@@ -148,10 +148,10 @@ async function gxCollage(g){
       G.drawImage(im,cx,cy,cw,ch,tx,ty,tw,th);
       const X=tx+(ux0-cx)*k,Y=ty+(uy0-cy)*k,BW=(ux1-ux0)*k,BH=(uy1-uy0)*k;
       G.lineJoin='round';G.strokeStyle='#FFFFFF';G.lineWidth=11;G.strokeRect(X,Y,BW,BH);G.strokeStyle=col;G.lineWidth=6;G.strokeRect(X,Y,BW,BH)}
-    const cap=`Ảnh ${x.pi+1}${(p.area||'').trim()?' · '+p.area.trim():''}`;G.font=`600 30px ${fontB}`;
+    const LL=capLang(),ar=(p.area||'').trim(),arX=LL!=='vi'&&ar?capOf(LL,ar):'',cap=`Ảnh ${x.pi+1}${LL!=='vi'&&CAPL[LL]?' / '+CAPL[LL].photo+' '+(x.pi+1):''}${ar?' · '+ar:''}${arX?' / '+arX:''}`;G.font=`600 30px ${fontL(LL)}`;
     let t=cap;while(t.length>4&&G.measureText(t).width>tw-40)t=t.slice(0,-2);if(t!==cap)t=t.replace(/\s*\S?$/,'')+'…';
     G.fillStyle='rgba(10,14,16,.68)';G.fillRect(tx,ty+th-54,tw,54);G.fillStyle='#FFFFFF';G.textBaseline='middle';G.textAlign='left';G.fillText(t,tx+20,ty+th-27);
-    if(more>0&&i===n-1){G.fillStyle='rgba(10,14,16,.5)';G.fillRect(tx,ty,tw,th-54);G.fillStyle='#FFFFFF';G.textAlign='center';G.font=`700 96px ${fontD}`;G.fillText(`+${more}`,tx+tw/2,ty+(th-54)/2-24);G.font=`600 34px ${fontB}`;G.fillText('vị trí khác',tx+tw/2,ty+(th-54)/2+50)}
+    if(more>0&&i===n-1){G.fillStyle='rgba(10,14,16,.5)';G.fillRect(tx,ty,tw,th-54);G.fillStyle='#FFFFFF';G.textAlign='center';G.font=`700 96px ${fontD}`;G.fillText(`+${more}`,tx+tw/2,ty+(th-54)/2-24);const LL=capLang(),MX={ko:'기타 위치',zh:'其他位置',en:'other locations'};G.font=`600 34px ${fontL(LL)}`;G.fillText('vị trí khác',tx+tw/2,ty+(th-54)/2+50);if(MX[LL]){G.font=`500 30px ${fontL(LL)}`;G.fillText(MX[LL],tx+tw/2,ty+(th-54)/2+92)}}
     G.restore()}
   return c;
 }

@@ -12,7 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Audit RBA">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Audit RBA v1.6.2</title>
+<title>Audit RBA v1.6.3</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
 <style>
 /* Bàn soát ảnh EHS: ảnh hiện trường trên nền tối, biển báo an toàn làm ngôn ngữ thị giác (số hiệu bát giác / thoi / tròn theo mức độ).
@@ -757,7 +757,7 @@ html:not([data-role="admin"]) .cl-admin{display:none!important}
 
 <div id="app" data-view="review">
   <header class="top">
-    <img class="applogo" src="icon-192.png" alt="" width="34" height="34"><div class="brand"><b>Audit RBA<small class="ver">v1.6.2</small></b><span id="brandSub">RBA Guider 8.0.1 · pháp lý chốt 01/11/2026</span></div>
+    <img class="applogo" src="icon-192.png" alt="" width="34" height="34"><div class="brand"><b>Audit RBA<small class="ver">v1.6.3</small></b><span id="brandSub">RBA Guider 8.0.1 · pháp lý chốt 01/11/2026</span></div>
     <button class="chip empty" id="chip" title="Thông tin audit, báo cáo và dữ liệu"><b id="chipU">Nhập thông tin audit</b><small id="chipD"></small></button>
     <span class="net" id="net" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 8.5a15 15 0 0120 0M5.5 12a10 10 0 0113 0M9 15.5a5 5 0 016 0"/><path d="M3 3l18 18"/></svg>Mất mạng</span>
     <span class="spacer"></span>
@@ -1201,7 +1201,7 @@ function pickWatch(){
 }
 const isZipF=f=>/\.zip$/i.test(f.name)||/zip/.test(f.type||''),isImgF=f=>(f.type||'').startsWith('image/')||/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name);
 /* ---------- Bản cài trên điện thoại: cài app, chạy khi mất mạng, cài đặt AI ---------- */
-const APP_VER='1.6.2';
+const APP_VER='1.6.3';
 const IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const STANDALONE=()=>!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));
 function offerSave(f){
@@ -4589,7 +4589,7 @@ const QXC=new Map();
 function gxMode(g){const x=g.items.find(x=>x.f.qxMode);return x?x.f.qxMode:(QX.cfg.groupImg||'collage')}
 function gxSetMode(g,m){for(const x of g.items){x.f.qxMode=m;Store.touch(x.p)}toast(m==='collage'?'Nhóm này xuất bằng ảnh ghép các vị trí.':'Nhóm này xuất bằng ảnh đại diện.');qxRefresh()}
 const gxOrder=g=>[g.rep,...g.items.filter(x=>x!==g.rep)];
-function gxSig(g){return g.k+'|'+g.sev+'|'+gxOrder(g).map(x=>{const b=bbox(x.f.s);return[x.p.id,x.f.id,x.p.w,x.p.h,x.pi,(x.p.area||'').trim(),b.x.toFixed(3),b.y.toFixed(3),b.w.toFixed(3),b.h.toFixed(3)].join(':')}).join(',')}
+function gxSig(g){const LL=capLang();return g.k+'|'+g.sev+'|'+LL+'|'+(LL!=='vi'?[...new Set(g.items.map(x=>capOf(LL,x.p.area)))].join('~')+'|':'')+gxOrder(g).map(x=>{const b=bbox(x.f.s);return[x.p.id,x.f.id,x.p.w,x.p.h,x.pi,(x.p.area||'').trim(),b.x.toFixed(3),b.y.toFixed(3),b.w.toFixed(3),b.h.toFixed(3)].join(':')}).join(',')}
 async function gxCollage(g){
   await fonts();
   const its=gxOrder(g),show=its.slice(0,4),more=its.length-show.length,n=show.length;
@@ -4606,10 +4606,10 @@ async function gxCollage(g){
       G.drawImage(im,cx,cy,cw,ch,tx,ty,tw,th);
       const X=tx+(ux0-cx)*k,Y=ty+(uy0-cy)*k,BW=(ux1-ux0)*k,BH=(uy1-uy0)*k;
       G.lineJoin='round';G.strokeStyle='#FFFFFF';G.lineWidth=11;G.strokeRect(X,Y,BW,BH);G.strokeStyle=col;G.lineWidth=6;G.strokeRect(X,Y,BW,BH)}
-    const cap=`Ảnh ${x.pi+1}${(p.area||'').trim()?' · '+p.area.trim():''}`;G.font=`600 30px ${fontB}`;
+    const LL=capLang(),ar=(p.area||'').trim(),arX=LL!=='vi'&&ar?capOf(LL,ar):'',cap=`Ảnh ${x.pi+1}${LL!=='vi'&&CAPL[LL]?' / '+CAPL[LL].photo+' '+(x.pi+1):''}${ar?' · '+ar:''}${arX?' / '+arX:''}`;G.font=`600 30px ${fontL(LL)}`;
     let t=cap;while(t.length>4&&G.measureText(t).width>tw-40)t=t.slice(0,-2);if(t!==cap)t=t.replace(/\s*\S?$/,'')+'…';
     G.fillStyle='rgba(10,14,16,.68)';G.fillRect(tx,ty+th-54,tw,54);G.fillStyle='#FFFFFF';G.textBaseline='middle';G.textAlign='left';G.fillText(t,tx+20,ty+th-27);
-    if(more>0&&i===n-1){G.fillStyle='rgba(10,14,16,.5)';G.fillRect(tx,ty,tw,th-54);G.fillStyle='#FFFFFF';G.textAlign='center';G.font=`700 96px ${fontD}`;G.fillText(`+${more}`,tx+tw/2,ty+(th-54)/2-24);G.font=`600 34px ${fontB}`;G.fillText('vị trí khác',tx+tw/2,ty+(th-54)/2+50)}
+    if(more>0&&i===n-1){G.fillStyle='rgba(10,14,16,.5)';G.fillRect(tx,ty,tw,th-54);G.fillStyle='#FFFFFF';G.textAlign='center';G.font=`700 96px ${fontD}`;G.fillText(`+${more}`,tx+tw/2,ty+(th-54)/2-24);const LL=capLang(),MX={ko:'기타 위치',zh:'其他位置',en:'other locations'};G.font=`600 34px ${fontL(LL)}`;G.fillText('vị trí khác',tx+tw/2,ty+(th-54)/2+50);if(MX[LL]){G.font=`500 30px ${fontL(LL)}`;G.fillText(MX[LL],tx+tw/2,ty+(th-54)/2+92)}}
     G.restore()}
   return c;
 }
@@ -4771,6 +4771,60 @@ function gxEdit(g){
     h('select',{'aria-label':'Ảnh xuất mặc định',onchange:e=>{QX.cfg.groupImg=e.target.value;QX.save();toast('Đã lưu ảnh xuất mặc định của nhóm.');qxRefresh()}},
       h('option',{value:'collage',selected:QX.cfg.groupImg!=='rep'},'Ghép ảnh các vị trí'),h('option',{value:'rep',selected:QX.cfg.groupImg==='rep'},'Ảnh đại diện'))))}
 window.__GX={chem:GX_CHEM,sx:sxItems,prep:qxPrep,cache:QXC};
+
+/* ---------- v1.6.3: Song ngữ thống nhất cho mọi file xuất, Findings bỏ thời hạn khắc phục ----------
+   Mọi file xuất (Findings, ảnh báo cáo, ảnh ghép nhóm lỗi, PDF, file đối chiếu Guider) dùng chung
+   cặp ngôn ngữ chọn trong Cài đặt (CFG.cap): Việt – Hàn, Việt – Trung, Việt – Anh hoặc chỉ tiếng Việt. */
+const LX_SITE={ko:'현장',zh:'现场',en:'Site'};
+function lxL(){const L=capLang();return L&&L!=='vi'&&TRX[L]?L:''}
+function lxT(L,vi){vi=String(vi||'').trim();return L&&vi?capOf(L,vi):''}
+/* Dịch các câu chưa có bản dịch sang ngôn ngữ L; trả về số câu còn thiếu */
+async function lxEnsure(L,texts,say,quiet){
+  if(!L)return 0;
+  const need=[...new Set(texts.map(t=>String(t||'').trim()).filter(t=>t&&!TRX[L].has(t)))];
+  return trBatch(L,need,say,quiet);
+}
+/* Tên khu vực cho ảnh ghép nhóm lỗi: dịch trước khi vẽ */
+{const _q=qxPrep;qxPrep=async function(...a){
+  const L=lxL();if(L&&QX.cfg.group&&QX.cfg.groupExport){try{await lxEnsure(L,S.photos.filter(p=>p.findings.some(done)).map(p=>p.area),null,true)}catch(e){console.warn(e)}}
+  return _q.apply(this,a);
+}}
+/* Findings: dịch sang ngôn ngữ đã chọn thay vì luôn tiếng Anh */
+ensureEnglish=async function(groups){
+  const L=lxL();if(!L)return 0;
+  const texts=groups.flatMap(g=>[g.p.area,...g.items.flatMap(({f})=>[f.title,CFG.fixes?planVi(f):''])]);
+  busy(cur(),`Đang dịch nội dung sang ${CAPN[L]}…`);
+  try{return await lxEnsure(L,texts,t=>busy(cur(),t))}catch(e){console.warn(e);return 0}finally{busy(null)}
+};
+/* Findings: một ảnh một dòng, nội dung song ngữ (ngôn ngữ chọn ở trên, tiếng Việt ở dưới), cột thời hạn để trống */
+photoRow=function(r,no,g){
+  const L=lxL(),tr=t=>L?lxT(L,t):'';
+  const fs=g.items.map(x=>x.f),rank=f=>{const k=SEV.indexOf(f.sev);return k<0?9:k};
+  const main=(fs.filter(f=>f.code).sort((x,y)=>rank(x)-rank(y))[0]||{}).code||'',multi=fs.some(f=>f.code&&f.code!==main);
+  const[B,C,E]=RBA.tpl.map[main]||['','',''],D=main;
+  const list=get=>g.items.map(({f,n})=>{const t=(get(f)||'').trim();return t?`${n}. ${multi&&f.code?`(${f.code}) `:''}${t}`:''}).filter(Boolean).join('\n');
+  const pair=(x,vi)=>x?`${x}\n\n${vi}`:vi;
+  const a=String(g.p.area||'').trim(),aX=tr(a),area=a?(aX?`${aX}\n${a}`:a):(L?`${LX_SITE[L]}\nHiện trường`:'Hiện trường');
+  const G=pair(L?list(f=>tr(f.title)):'',list(f=>f.title)),M=CFG.fixes?pair(L?list(f=>tr(planVi(f))):'',list(planVi)):'';
+  const cause=fs.some(f=>(f.cause||'Administrative')==='Facility')?'Facility':'Administrative',mand=fs.some(f=>f.mand);
+  const cs=C.includes('\n')?31:C==='Environment'?4:9;
+  const pt=Math.min(409,Math.max(CELL_HPT,6+16*Math.max(lineCount(G,70),lineCount(M,35),lineCount(area,15),lineCount(E,32),lineCount(B,35),lineCount(D,8))));
+  const xml=`<row r="${r}" spans="1:19" ht="${pt.toFixed(1)}" customHeight="1"><c r="A${r}" s="4"><v>${no}</v></c>${xText('B'+r,31,B)}${xText('C'+r,cs,C)}${xText('D'+r,31,D)}${xText('E'+r,7,E)}${xText('F'+r,31,area)}${xText('G'+r,32,G)}${xText('H'+r,78,cause)}${xText('I'+r,48,mand?'mandatory':'')}<c r="J${r}" s="4"/><c r="K${r}" s="4"/><c r="L${r}" s="1"/>${xText('M'+r,2,M)}<c r="N${r}" s="4"/><c r="O${r}" s="1"/><c r="P${r}" s="1"/><c r="Q${r}" s="1"/><c r="R${r}" s="1"/><c r="S${r}" s="1"/></row>`;
+  return{pt,xml};
+};
+/* File đối chiếu Guider: phát hiện và hành động khắc phục ghi song ngữ "tiếng Việt / bản dịch" */
+{const _r=exportReview;exportReview=async function(...a){
+  const L=lxL();if(!L||!exportReady().ready)return _r.apply(this,a);
+  try{await qxPrep()}catch(e){console.warn(e)}
+  const gs=gather();
+  if(gs.length){busy(cur(),`Đang dịch nội dung sang ${CAPN[L]}…`);
+    try{const miss=await lxEnsure(L,gs.flatMap(g=>g.items.flatMap(({f})=>[f.title,planVi(f)])),t=>busy(cur(),t));if(miss>0)toast(`${miss} câu chưa dịch được, tạm ghi tiếng Việt.`)}catch(e){console.warn(e)}finally{busy(null)}}
+  const bi=t=>{const v=String(t||'').trim(),x=lxT(L,v);return x?`${v.replace(/[.。]$/,'')} / ${x}`:v};
+  const _g=gather;
+  gather=function(){return _g().map(G=>({p:G.p,items:G.items.map(x=>({...x,f:{...x.f,title:bi(x.f.title),fixRoot:bi(planVi(x.f)),fixNow:''}}))}))};
+  try{return await _r.apply(this,a)}finally{gather=_g}
+}}
+window.__LX={lang:lxL};
 
 /* ---------- Khởi động ---------- */
 (async()=>{

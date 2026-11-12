@@ -59,18 +59,24 @@ App soát ảnh hiện trường EHS theo RBA Guider 8.0.1: AI khoanh vùng và 
 - **"Vấn đề có thể có" khi mở ảnh:** tích chọn để thêm lỗi (AI nghi ngờ, mục cần xác minh, gợi ý theo loại ảnh); bỏ tích để xóa.
 - **Hóa chất:** bảng phân loại cần/không cần khay chống tràn, cần tủ thông gió/hút mùi; lỗi mới H10 (hóa chất dễ bay hơi không thông gió, hút mùi); ô "Tra cứu" trong thẻ lỗi H1/H2/H3/H5/H8/H9/H10/V5.
 
+## Song ngữ cho mọi file xuất (v1.6.3, `ai/ai-lang.js`)
+
+- Findings, ảnh báo cáo, ảnh ghép nhóm lỗi, PDF và file đối chiếu Guider dùng chung cặp ngôn ngữ chọn trong Cài đặt (Việt – Hàn / Việt – Trung / Việt – Anh).
+- Findings: khu vực, phát hiện, biện pháp ghi bản dịch ở trên, tiếng Việt ở dưới; cột thời hạn khắc phục để trống.
+- File đối chiếu Guider: phát hiện và hành động khắc phục ghi "tiếng Việt / bản dịch".
+
 ## Phát hành bản mới
 
 ```bash
 cd source
 mkdir -p out
-python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6.2
-python3 3-cong-cu-dung/pwa_assets.py out 1.6.2 3-cong-cu-dung/logo.webp
+python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6.3
+python3 3-cong-cu-dung/pwa_assets.py out 1.6.3 3-cong-cu-dung/logo.webp
 cp 3-cong-cu-dung/_headers out/
 python3 3-cong-cu-dung/patch_cloud.py out/index.html https://audit-rba-api.likiop00.workers.dev
 python3 3-cong-cu-dung/patch_ai.py out/index.html
 cd .. && rm -rf docs/* && cp -r source/out/. docs/ && touch docs/.nojekyll && rm -rf source/out
-git add -A && git commit -m "v1.6.2" && git push
+git add -A && git commit -m "v1.6.3" && git push
 ```
 
 Nếu sửa `server/`: `cd server && npx wrangler deploy` (nếu đổi bảng thì chạy thêm `npx wrangler d1 execute audit-rba --remote --file schema.sql`).
