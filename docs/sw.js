@@ -1,5 +1,5 @@
 // Audit RBA: chạy khi mất mạng. Trang chính lấy bản mới khi có mạng, mất mạng thì dùng bản đã lưu.
-const V='audit-rba-1.6.3';
+const V='audit-rba-1.6.4';
 const SHELL=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','icon-maskable-512.png','apple-touch-icon.png'];
 const CDN=['https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'];
 self.addEventListener('install',e=>{e.waitUntil((async()=>{const c=await caches.open(V);await c.addAll(SHELL);

@@ -65,18 +65,23 @@ App soát ảnh hiện trường EHS theo RBA Guider 8.0.1: AI khoanh vùng và 
 - Findings: khu vực, phát hiện, biện pháp ghi bản dịch ở trên, tiếng Việt ở dưới; cột thời hạn khắc phục để trống.
 - File đối chiếu Guider: phát hiện và hành động khắc phục ghi "tiếng Việt / bản dịch".
 
+## Báo lỗi key Gemini rõ nguyên nhân (v1.6.4, `ai/ai-key.js`)
+
+- Lỗi 403 hiện đúng nguyên nhân Google báo và cách sửa: key bị lộ, giới hạn trang web, giới hạn API, chưa bật Generative Language API, vị trí mạng (VPN), thanh toán.
+- Nếu chỉ một mô hình bị chặn, app tự thử mô hình Gemini khác và nhớ mô hình dùng được.
+
 ## Phát hành bản mới
 
 ```bash
 cd source
 mkdir -p out
-python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6.3
-python3 3-cong-cu-dung/pwa_assets.py out 1.6.3 3-cong-cu-dung/logo.webp
+python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6.4
+python3 3-cong-cu-dung/pwa_assets.py out 1.6.4 3-cong-cu-dung/logo.webp
 cp 3-cong-cu-dung/_headers out/
 python3 3-cong-cu-dung/patch_cloud.py out/index.html https://audit-rba-api.likiop00.workers.dev
 python3 3-cong-cu-dung/patch_ai.py out/index.html
 cd .. && rm -rf docs/* && cp -r source/out/. docs/ && touch docs/.nojekyll && rm -rf source/out
-git add -A && git commit -m "v1.6.3" && git push
+git add -A && git commit -m "v1.6.4" && git push
 ```
 
 Nếu sửa `server/`: `cd server && npx wrangler deploy` (nếu đổi bảng thì chạy thêm `npx wrangler d1 execute audit-rba --remote --file schema.sql`).
