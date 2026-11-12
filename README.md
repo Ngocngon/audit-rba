@@ -40,18 +40,25 @@ App soát ảnh hiện trường EHS theo RBA Guider 8.0.1: AI khoanh vùng và 
 - **Gom lỗi lặp lại:** cùng loại lỗi ở nhiều ảnh gom thành nhóm ở màn Xác nhận lỗi; xác nhận cả nhóm, thống nhất mã và mức độ, chọn ảnh đại diện, tách lỗi khỏi nhóm. Khi xuất Findings, mỗi nhóm là 1 dòng (ghi số vị trí, khu vực) với ảnh đại diện.
 - Bật tắt: Cài đặt hệ thống → AI soát ảnh → Kiểm soát chất lượng kết quả.
 
+## Bổ sung dữ liệu kiểm tra (v1.6, `ai/ai-data.js`)
+
+- **Tủ điện:** danh sách kiểm tra chi tiết luôn gửi kèm lời nhắc (đầu cos, ống lồng số dây, tấm cover, gỉ sét, ốc lỏng, nhãn aptomat, màu dây vàng-xanh, tiếp địa cửa tủ, khóa, biển cảnh báo, sơ đồ một sợi). Lỗi mới D14–D21.
+- **Bảng tên người phụ trách:** tủ điện (D14), tủ máy, tủ thiết bị, kho, cửa kho bãi (NT1), thiết bị môi trường (V1).
+- **Bảng tin:** kết quả quan trắc môi trường lao động (BT1, BT2 — Luật 84/2015/QH13 Điều 18 khoản 2, khoản 4 điểm a), thông tin an toàn bắt buộc (BT3), kênh phản ánh (BT4), tài liệu hết hiệu lực, rách, mờ (BT5), chính sách EHS (BT6); các tài liệu lao động chỉ nhắc kiểm tra.
+- Bảng quy tắc từ khóa có thêm các lỗi mới; D7, D9, D12 tinh chỉnh từ khóa.
+
 ## Phát hành bản mới
 
 ```bash
 cd source
 mkdir -p out
-python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.5
-python3 3-cong-cu-dung/pwa_assets.py out 1.5 3-cong-cu-dung/logo.webp
+python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6
+python3 3-cong-cu-dung/pwa_assets.py out 1.6 3-cong-cu-dung/logo.webp
 cp 3-cong-cu-dung/_headers out/
 python3 3-cong-cu-dung/patch_cloud.py out/index.html https://audit-rba-api.likiop00.workers.dev
 python3 3-cong-cu-dung/patch_ai.py out/index.html
 cd .. && rm -rf docs/* && cp -r source/out/. docs/ && touch docs/.nojekyll && rm -rf source/out
-git add -A && git commit -m "v1.5" && git push
+git add -A && git commit -m "v1.6" && git push
 ```
 
 Nếu sửa `server/`: `cd server && npx wrangler deploy` (nếu đổi bảng thì chạy thêm `npx wrangler d1 execute audit-rba --remote --file schema.sql`).
