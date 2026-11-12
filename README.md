@@ -52,18 +52,25 @@ App soát ảnh hiện trường EHS theo RBA Guider 8.0.1: AI khoanh vùng và 
   - Bình chữa cháy: chưa kiểm định, không có checklist (TN2), phiếu không cập nhật (F13), vòi, loa phun, gioăng cao su hỏng (TN3), che chắn (F8), thiếu layout PCCC, tiêu lệnh (F16).
   - Hóa chất: nhãn GHS, hình đồ cảnh báo (H2), biển cảnh báo bể, bồn, kho (H9), khay chống tràn (H1), để sai khu vực lưu trữ (H8).
 
+## Nhóm lỗi, gợi ý vấn đề, tra cứu hóa chất (v1.6.2, `ai/ai-group.js`)
+
+- **1 lỗi nhiều ảnh = 1 dòng khi xuất:** mỗi nhóm chọn "Ảnh ghép" (tối đa 4 ảnh, có khung lỗi và chú thích) hoặc "Ảnh đại diện". Áp dụng thống nhất cho Findings, PDF, ảnh báo cáo, zip. Mặc định chỉnh trong Cài đặt.
+- **Sửa nhóm, thêm vấn đề:** đổi mã lỗi, tiêu đề chung, mức độ, bằng chứng, biện pháp; tích gợi ý liên quan, "AI soát lại nhóm" hoặc tự gõ (mỗi dòng 1 vấn đề) → tạo lỗi riêng hoặc gộp vào tiêu đề nhóm.
+- **"Vấn đề có thể có" khi mở ảnh:** tích chọn để thêm lỗi (AI nghi ngờ, mục cần xác minh, gợi ý theo loại ảnh); bỏ tích để xóa.
+- **Hóa chất:** bảng phân loại cần/không cần khay chống tràn, cần tủ thông gió/hút mùi; lỗi mới H10 (hóa chất dễ bay hơi không thông gió, hút mùi); ô "Tra cứu" trong thẻ lỗi H1/H2/H3/H5/H8/H9/H10/V5.
+
 ## Phát hành bản mới
 
 ```bash
 cd source
 mkdir -p out
-python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6.1
-python3 3-cong-cu-dung/pwa_assets.py out 1.6.1 3-cong-cu-dung/logo.webp
+python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6.2
+python3 3-cong-cu-dung/pwa_assets.py out 1.6.2 3-cong-cu-dung/logo.webp
 cp 3-cong-cu-dung/_headers out/
 python3 3-cong-cu-dung/patch_cloud.py out/index.html https://audit-rba-api.likiop00.workers.dev
 python3 3-cong-cu-dung/patch_ai.py out/index.html
 cd .. && rm -rf docs/* && cp -r source/out/. docs/ && touch docs/.nojekyll && rm -rf source/out
-git add -A && git commit -m "v1.6.1" && git push
+git add -A && git commit -m "v1.6.2" && git push
 ```
 
 Nếu sửa `server/`: `cd server && npx wrangler deploy` (nếu đổi bảng thì chạy thêm `npx wrangler d1 execute audit-rba --remote --file schema.sql`).

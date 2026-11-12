@@ -9,7 +9,7 @@ def rep(a, b, n=1):
     c = s.count(a)
     assert c == n, f'cần {n} chỗ, thấy {c}: {a[:70]!r}'
     s = s.replace(a, b)
-js = (here / 'ai' / 'ai-boost.js').read_text(encoding='utf-8') + '\n' + (here / 'ai' / 'ai-quality.js').read_text(encoding='utf-8') + '\n' + (here / 'ai' / 'ai-data.js').read_text(encoding='utf-8')
+js = (here / 'ai' / 'ai-boost.js').read_text(encoding='utf-8') + '\n' + (here / 'ai' / 'ai-quality.js').read_text(encoding='utf-8') + '\n' + (here / 'ai' / 'ai-data.js').read_text(encoding='utf-8') + '\n' + (here / 'ai' / 'ai-group.js').read_text(encoding='utf-8')
 css = (here / 'ai' / 'ai-boost.css').read_text(encoding='utf-8')
 # cấu hình gọi Gemini: kết quả ổn định, đọc ảnh độ phân giải cao
 rep("generationConfig:{maxOutputTokens:32768,", "generationConfig:{maxOutputTokens:32768,...(window.__AIX?window.__AIX.gen(model,o):{}),")

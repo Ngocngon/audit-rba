@@ -6,7 +6,7 @@
    4. Gom lỗi lặp lại ở nhiều vị trí thành nhóm; xuất Findings một dòng cho mỗi nhóm
    Chèn sau ai-boost.js, trước "Khởi động".
    ====================================================================== */
-const QX={cfg:(()=>{const d={rules:true,ground:true,dupImg:true,group:true,groupExport:true};try{return{...d,...JSON.parse(localStorage.getItem('soat-ehs-qx')||'{}')}}catch{return d}})(),
+const QX={cfg:(()=>{const d={rules:true,ground:true,dupImg:true,group:true,groupExport:true,groupImg:'collage'};try{return{...d,...JSON.parse(localStorage.getItem('soat-ehs-qx')||'{}')}}catch{return d}})(),
   save(){try{localStorage.setItem('soat-ehs-qx',JSON.stringify(this.cfg))}catch{}},exp:false};
 window.__QX=QX;
 const qn=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/\s+/g,' ');
@@ -234,7 +234,7 @@ function qxGo(p,f){S.listAll=false;S.cur=p.id;S.sel=f.id;if(typeof setDView==='f
 function qxPanel(){
   if(!QX.cfg.group)return null;const gs=qxGroups();if(!gs.length)return null;
   const nf=gs.reduce((a,g)=>a+g.items.length,0);
-  return h('details',{class:'qxgrp',open:true},h('summary',null,h('b',null,`Lỗi lặp lại ở nhiều vị trí: ${gs.length} nhóm`),h('small',null,` · ${nf} lỗi. Mỗi nhóm được thống nhất mã, mức độ và xuất thành 1 dòng trong file Findings với ảnh đại diện.`)),
+  return h('details',{class:'qxgrp',open:true},h('summary',null,h('b',null,`Lỗi lặp lại ở nhiều vị trí: ${gs.length} nhóm`),h('small',null,` · ${nf} lỗi. Mỗi nhóm là 1 lỗi duy nhất trong mọi file xuất (1 dòng Findings, 1 trang PDF, 1 ảnh báo cáo) với ảnh ghép các vị trí hoặc ảnh đại diện.`)),
     ...gs.map(g=>{const okN=g.items.filter(x=>x.f.ok).length,R=g.rep.f;
       return h('div',{class:'qxg1'},
         h('div',{class:'qxgh'},h('span',{class:'pill '+g.sev},g.sev),h('span',{class:'tag'},R.req||R.code||'—'),h('b',null,g.r?g.r.t:R.title),h('span',{class:'spacer'}),h('small',null,`${g.items.length} vị trí · ${okN}/${g.items.length} đã xác nhận`)),
@@ -243,6 +243,8 @@ function qxPanel(){
           h('img',{src:x.p.thumb,alt:`Ảnh ${x.pi+1}`,title:x.f.title,onclick:()=>qxGo(x.p,x.f)}),
           h('small',null,`${x.pi+1}.${x.n}${x===g.rep?' · đại diện':''}`),
           h('div',{class:'qxgb'},x===g.rep?null:h('button',{class:'btn sm',title:'Dùng ảnh này làm ảnh đại diện khi xuất file',onclick:()=>qxSetRep(x.p,x.f)},'Đại diện'),h('button',{class:'btn sm',title:'Không gom lỗi này vào nhóm',onclick:()=>qxSplit(x.p,x.f)},'Tách'))))),
+        h('div',{class:'qxgf gxbar'},h('label',{class:'gxmode',title:'Ảnh dùng cho file Findings, PDF, ảnh báo cáo'},'Ảnh xuất: ',h('select',{'aria-label':'Ảnh xuất của nhóm',onchange:e=>gxSetMode(g,e.target.value)},h('option',{value:'collage',selected:gxMode(g)==='collage'},'Ghép ảnh các vị trí'),h('option',{value:'rep',selected:gxMode(g)==='rep'},'Ảnh đại diện'))),
+          h('button',{class:'btn sm',onclick:()=>gxShow(g)},'Xem ảnh xuất'),h('button',{class:'btn sm primary',onclick:()=>gxEdit(g)},'Sửa nhóm, thêm vấn đề')),
         h('div',{class:'qxgf'},h('button',{class:'btn sm good',onclick:()=>qxConfirm(g)},okN===g.items.length?'✓ Đã xác nhận cả nhóm':'Xác nhận cả nhóm'),h('button',{class:'btn sm',onclick:()=>{qxUnify(g);toast(`Đã thống nhất mã ${R.req||R.code||''}, mức ${g.sev} cho cả nhóm.`);qxRefresh()}},'Thống nhất mã và mức độ')))}));
 }
 {const _rt=renderTable;renderTable=function(){_rt();try{if(iTyping())return;let box=$('qxGrp');if(!box){box=h('div',{id:'qxGrp'});$('tSel').before(box)}const pn=qxPanel();box.replaceChildren(...(pn?[pn]:[]))}catch(e){console.warn(e)}}}
@@ -252,18 +254,7 @@ function qxPanel(){
   const gt=g?h('span',{class:'tag qxg',title:'Khu vực: '+qxAreas(g.items).join('; ')},`Lặp lại · ${g.items.length} vị trí`):null;
   if(!fx&&!gt)return a;return h('span',{class:'qxtags'},a,gt,fx)}}
 
-/* Xuất Findings: mỗi nhóm một dòng, chỉ chèn ảnh đại diện */
-{const _ga=gather;gather=function(){
-  const base=_ga();if(!QX.exp||!QX.cfg.groupExport||!QX.cfg.group)return base;
-  const gs=qxGroups(true);if(!gs.length)return base;
-  const drop=new Set(),repl=new Map();
-  for(const g of gs){for(const x of g.items)if(x!==g.rep)drop.add(x.f);
-    const R=g.rep.f,areas=qxAreas(g.items);
-    repl.set(R,{...R,sev:g.sev,mand:g.items.some(x=>x.f.mand)||R.mand,title:`${str(R.title).replace(/[.。\s]+$/,'')} (lặp lại tại ${g.items.length} vị trí: ${areas.join('; ')})`})}
-  return base.map(G=>({p:G.p,items:G.items.filter(x=>!drop.has(x.f)).map(x=>repl.has(x.f)?{f:repl.get(x.f),n:x.n}:x)})).filter(G=>G.items.length);
-}}
-{const _ef=exportFindings;exportFindings=async function(...a){QX.exp=true;try{return await _ef.apply(this,a)}finally{QX.exp=false}}}
-QX.preview=()=>{QX.exp=true;try{return gather().map(G=>({photo:G.p.name,area:G.p.area,items:G.items.map(x=>({n:x.n,title:x.f.title,req:x.f.req,sev:x.f.sev}))}))}finally{QX.exp=false}};
+/* Xuất file: mọi file xuất dùng chung cách gom nhóm — xem ai-group.js (v1.6.2) */
 
 /* ---------- Cài đặt ---------- */
 {const card=$('setAIcard')||$('setAI');if(card){
@@ -273,4 +264,4 @@ QX.preview=()=>{QX.exp=true;try{return gather().map(G=>({photo:G.p.name,area:G.p
     opt('ground','AI chỉ ra vật thể trước khi kết luận','AI liệt kê vật thể nhìn thấy, mỗi lỗi phải gắn vật thể làm bằng chứng; lỗi không gắn được bị loại. Khung lỗi bám sát vật thể.'),
     opt('dupImg','Loại ảnh trùng khi tải lên','Ảnh giống hệt ảnh đã có: tự bỏ qua. Ảnh gần giống (chụp lại cùng chỗ): hỏi giữ hay bỏ.'),
     opt('group','Gom lỗi lặp lại ở nhiều vị trí','Cùng loại lỗi ở nhiều ảnh được gom thành nhóm, thống nhất mã và mức độ, xác nhận một lần.'),
-    opt('groupExport','Xuất mỗi nhóm thành 1 dòng','Trong file Findings, nhóm lỗi lặp lại ghi 1 dòng kèm số vị trí và khu vực, chỉ chèn ảnh đại diện.')))}}
+    opt('groupExport','Xuất mỗi nhóm thành 1 lỗi duy nhất','Trong file Findings, PDF trình chiếu, ảnh báo cáo, file nén và file đối chiếu Guider: nhóm lỗi lặp lại là 1 lỗi kèm số vị trí và khu vực, dùng ảnh ghép các vị trí hoặc ảnh đại diện.')))}}

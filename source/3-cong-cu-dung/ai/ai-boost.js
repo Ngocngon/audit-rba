@@ -193,7 +193,7 @@ Chỉ trả về một JSON:
 const AIEV={q:(()=>{try{return JSON.parse(localStorage.getItem('soat-ehs-aiev')||'[]')}catch{return[]}})(),t:0,
   push(e){if(!e)return;const m=(AILOG.find(x=>x.ok&&x.model)||{}).model||'';this.q.push({id:uid()+uid(),at:Date.now(),audit_id:(typeof CL!=='undefined'&&CL.audit&&CL.audit.id)||'',model:m,...e});if(this.q.length>500)this.q.splice(0,this.q.length-500);this.save();clearTimeout(this.t);this.t=setTimeout(()=>this.flush(),4000)},
   save(){try{localStorage.setItem('soat-ehs-aiev',JSON.stringify(this.q))}catch{}},
-  async flush(){if(!this.q.length||typeof clOn!=='function'||!clOn()||NET.off||(CL.auth&&CL.auth.user&&CL.auth.user.role==='viewer')){if(CL.auth&&CL.auth.user&&CL.auth.user.role==='viewer'){this.q=[];this.save()}return}
+  async flush(){const vw=typeof CL!=='undefined'&&CL.auth&&CL.auth.user&&CL.auth.user.role==='viewer';if(!this.q.length||typeof clOn!=='function'||!clOn()||NET.off||vw){if(vw){this.q=[];this.save()}return}
     const b=this.q.slice(0,200);try{await api('POST','/api/ai/events',{events:b});this.q=this.q.slice(b.length);this.save()}catch{}}
 };
 {const _learn=learn;learn=function(f,p){
