@@ -46,19 +46,24 @@ App soát ảnh hiện trường EHS theo RBA Guider 8.0.1: AI khoanh vùng và 
 - **Bảng tên người phụ trách:** tủ điện (D14), tủ máy, tủ thiết bị, kho, cửa kho bãi (NT1), thiết bị môi trường (V1).
 - **Bảng tin:** kết quả quan trắc môi trường lao động (BT1, BT2 — Luật 84/2015/QH13 Điều 18 khoản 2, khoản 4 điểm a), thông tin an toàn bắt buộc (BT3), kênh phản ánh (BT4), tài liệu hết hiệu lực, rách, mờ (BT5), chính sách EHS (BT6); các tài liệu lao động chỉ nhắc kiểm tra.
 - Bảng quy tắc từ khóa có thêm các lỗi mới; D7, D9, D12 tinh chỉnh từ khóa.
+- **v1.6.1 — kiểm tra theo loại ảnh** (luôn gửi kèm lời nhắc):
+  - Trần nhà: ẩm mốc, thấm dột, rò rỉ nước (TR1), trần sụt vỡ (TR2), thiếu đầu báo cháy (F14), kho hóa chất/cồn dùng thiết bị điện không phòng nổ (F15).
+  - Cửa, lối ra vào: đèn EXIT (F5), chiều mở cửa (F3), vật cản, khóa cửa (F1, F2).
+  - Bình chữa cháy: chưa kiểm định, không có checklist (TN2), phiếu không cập nhật (F13), vòi, loa phun, gioăng cao su hỏng (TN3), che chắn (F8), thiếu layout PCCC, tiêu lệnh (F16).
+  - Hóa chất: nhãn GHS, hình đồ cảnh báo (H2), biển cảnh báo bể, bồn, kho (H9), khay chống tràn (H1), để sai khu vực lưu trữ (H8).
 
 ## Phát hành bản mới
 
 ```bash
 cd source
 mkdir -p out
-python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6
-python3 3-cong-cu-dung/pwa_assets.py out 1.6 3-cong-cu-dung/logo.webp
+python3 3-cong-cu-dung/patch_pwa.py 1-ma-nguon-app/soat-anh-ehs-rba.html out/index.html 1.6.1
+python3 3-cong-cu-dung/pwa_assets.py out 1.6.1 3-cong-cu-dung/logo.webp
 cp 3-cong-cu-dung/_headers out/
 python3 3-cong-cu-dung/patch_cloud.py out/index.html https://audit-rba-api.likiop00.workers.dev
 python3 3-cong-cu-dung/patch_ai.py out/index.html
 cd .. && rm -rf docs/* && cp -r source/out/. docs/ && touch docs/.nojekyll && rm -rf source/out
-git add -A && git commit -m "v1.6" && git push
+git add -A && git commit -m "v1.6.1" && git push
 ```
 
 Nếu sửa `server/`: `cd server && npx wrangler deploy` (nếu đổi bảng thì chạy thêm `npx wrangler d1 execute audit-rba --remote --file schema.sql`).

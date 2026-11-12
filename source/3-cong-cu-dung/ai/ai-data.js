@@ -8,6 +8,7 @@
    ====================================================================== */
 const DX_LD=[["BH102","05","Luật 84/2015/QH13 — Điều 16, 18, 23; TT 25/2022/TT-BLĐTBXH — Điều 7."],["BM102","07","NĐ 62/2025/NĐ-CP — Điều 26–29; TCVN 9385:2012."]];
 const DX_LI=[["BM301","02","Luật 84/2015/QH13 — Điều 16; Luật 55/2024/QH15 — Điều 20."]];
+const DX_LW5=[["BH102","05","Luật 84/2015/QH13 — Điều 16, 18, 23; TT 25/2022/TT-BLĐTBXH — Điều 7."],["BM102","10","Luật 84/2015/QH13 — Điều 18; TCVN ISO 45001:2018 — Điều khoản 8.1.2."]];
 const DX_QT="Luật 84/2015/QH13 — Điều 18 khoản 2 (quan trắc môi trường lao động ít nhất 1 lần/năm), khoản 4 điểm a (ngay sau khi có kết quả, thông báo công khai cho người lao động tại nơi quan trắc).";
 const dxR=(id,g,t,k,c,q,l,v,n,x,z,kd,lx)=>({id,g,t,k,c,q,l,v,n,x,o:'m',z,kd,lx});
 const DX_G='Bảng tin, bảng tên & niêm yết';
@@ -56,7 +57,29 @@ const DX_RULES=[
     'Chia bảng tin theo khu (An toàn, Môi trường, Nhân sự); ghi ngày niêm yết và ngày gỡ trên từng tài liệu; kiểm tra hằng tháng.','Administrative','violation'),
   dxR('BT6',DX_G,'Bảng tin không niêm yết chính sách an toàn, sức khỏe, môi trường','bảng tin đọc được tiêu đề các tài liệu nhưng không có chính sách an toàn, sức khỏe, môi trường (EHS) của công ty','CM202','CM202-01',[["CM202","01","Luật 72/2020/QH14 — Điều 4; TCVN ISO 14001:2015 — Điều khoản 5.2."]],'Minor',
     'Niêm yết chính sách an toàn, sức khỏe, môi trường bản hiện hành có chữ ký lãnh đạo.',
-    'Đưa chính sách EHS vào danh mục tài liệu bắt buộc của mọi bảng tin; cập nhật khi chính sách được soát xét.','Administrative','violation')
+    'Đưa chính sách EHS vào danh mục tài liệu bắt buộc của mọi bảng tin; cập nhật khi chính sách được soát xét.','Administrative','violation'),
+  /* v1.6.1: trần mái, cửa, bình chữa cháy, hóa chất */
+  dxR('TR1','Trần, mái & kết cấu','Trần, mái ẩm mốc, thấm dột hoặc rò rỉ nước','vết ố vàng, nấm mốc đen, tấm trần thấm nước, nước nhỏ giọt từ trần, ống nước, ống gió, điều hòa','BH102','BH102-01',DX_LW5,'Minor',
+    'Che chắn, hứng nước tại điểm rò; di dời hàng hóa, cắt điện thiết bị điện ngay dưới điểm rò; lau khô sàn, đặt biển cảnh báo trơn trượt.',
+    'Bảo trì xác định nguồn rò (mái, máng xối, ống nước, ống ngưng điều hòa) và sửa triệt để; thay tấm trần mốc; đưa trần, mái vào lịch kiểm tra định kỳ trước mùa mưa.','Facility','hazard'),
+  dxR('TR2','Trần, mái & kết cấu','Tấm trần, kết cấu trần bong tróc, sụt, vỡ hoặc lỗ hở có nguy cơ rơi','tấm trần thạch cao võng, sụt, vỡ, mất tấm; lớp vữa, sơn bong; vật treo trên trần lỏng lẻo','BH102','BH102-01',DX_LW5,'Major',
+    'Rào chắn khu vực bên dưới, gỡ phần trần có nguy cơ rơi.',
+    'Thay, gia cố tấm trần và khung treo; kiểm tra kết cấu trần, vật treo trên cao định kỳ 6 tháng.','Facility','hazard'),
+  dxR('F14','PCCC & thoát nạn','Thiếu đầu báo cháy hoặc đầu báo bố trí không phủ kín khu vực','khoảng trần rộng của phòng, kho nhìn rõ nhưng không có đầu báo khói, báo nhiệt; đầu báo bị tháo, chỉ còn đế','BH201','BH201-03',[["BH201","01","Luật 55/2024/QH15 — Điều 16–18; QCVN 06:2022/BXD và Sửa đổi 1:2023."]],'Major',
+    'Báo đơn vị PCCC kiểm tra, lắp bổ sung đầu báo tại vị trí thiếu; trong thời gian chờ, tăng tuần tra và bố trí bình chữa cháy.',
+    'Rà soát bản vẽ hệ thống báo cháy theo hiện trạng sử dụng (ngăn phòng, đổi công năng kho); lắp bổ sung và thử nghiệm đầu báo định kỳ.','Facility','violation',[["BH201","01","TCVN 5738:2021 (hệ thống báo cháy tự động)."]]),
+  dxR('F15','PCCC & thoát nạn','Kho hóa chất, kho cồn, dung môi dùng thiết bị điện không phải loại phòng nổ','đèn tuýp, đèn thường, quạt, công tắc, ổ cắm loại dân dụng trong kho hoặc khu chứa cồn, dung môi, sơn, xăng dầu, gas','BH201','BH201-02',[["BM202","05","Luật 55/2024/QH15; NĐ 105/2025/NĐ-CP (sửa bởi NĐ 347/2026/NĐ-CP); Luật 84/2015/QH13 — Điều 19."],["BM202","08","Luật 69/2025/QH15; NĐ 25/2026/NĐ-CP; NĐ 26/2026/NĐ-CP; TT 01/2026/TT-BCT; ISO 45001:2018 — 8.1.3."]],'Major',
+    'Ngắt điện thiết bị không phòng nổ trong kho, dùng đèn chiếu từ ngoài vào; tăng thông gió, đóng kín nắp các thùng chứa.',
+    'Thay đèn, quạt, công tắc, ổ cắm bằng loại phòng nổ phù hợp vùng nguy hiểm (có ký hiệu Ex); đặt công tắc, tủ điện bên ngoài kho; đánh giá phân vùng nguy hiểm cháy nổ.','Facility','hazard',[["BH201","01","IEC 60079 (thiết bị điện dùng trong khu vực có khí, hơi dễ cháy nổ)."]]),
+  dxR('F16','PCCC & thoát nạn','Thiếu sơ đồ bố trí phương tiện PCCC, biển vị trí bình chữa cháy hoặc tiêu lệnh, nội quy PCCC','điểm đặt bình, tủ chữa cháy không có biển chỉ vị trí, tiêu lệnh, nội quy; khu vực không có sơ đồ (layout) bố trí phương tiện PCCC','BH201','BH201-04',[["BH201","04","TT 36/2025/TT-BCA — Điều 5–8 và Phụ lục VI; TCVN 3890:2023."]],'Minor',
+    'Dán biển vị trí bình chữa cháy, tiêu lệnh, nội quy PCCC tại điểm đặt bình; treo sơ đồ bố trí phương tiện PCCC tại lối vào khu vực.',
+    'Lập sơ đồ bố trí phương tiện PCCC cho từng khu vực, đánh số từng bình khớp với phiếu kiểm tra; cập nhật khi di dời bình.','Administrative','violation'),
+  dxR('H8','Hóa chất','Hóa chất để ngoài khu vực lưu trữ quy định','can, chai, bình hóa chất để trên sàn xưởng, lối đi, bàn làm việc, cạnh tủ điện hoặc nguồn nhiệt; để ngoài tủ, kho hóa chất; số lượng vượt lượng dùng trong ca','BH401','BH401-05',[["BM202","08","Luật 69/2025/QH15; NĐ 25/2026/NĐ-CP; NĐ 26/2026/NĐ-CP; TT 01/2026/TT-BCT; ISO 45001:2018 — 8.1.3."],["BH401","02","Luật 69/2025/QH15 — Điều 25; NĐ 26/2026/NĐ-CP; TT 01/2026/TT-BCT."]],'Major',
+    'Chuyển ngay hóa chất về tủ, kho hóa chất hoặc vị trí tạm có khay chống tràn, biển nhận diện.',
+    'Quy định vị trí lưu trữ tạm tại xưởng (tủ có khay, giới hạn lượng dùng trong ca, kẻ vạch, biển tên); cuối ca trả hóa chất về kho; kiểm tra trong đi tuần ca.','Administrative','violation'),
+  dxR('H9','Hóa chất','Bể, bồn, tủ, kho hóa chất thiếu biển cảnh báo, hình đồ cảnh báo hoặc bảng thông tin hóa chất','bể, bồn chứa, tủ, cửa kho hóa chất không có biển cảnh báo nguy hiểm, hình đồ GHS, tên hóa chất, bảng SDS tóm tắt, hướng dẫn ứng phó','BH401','BH401-05',[["BH401","02","Luật 69/2025/QH15 — Điều 25; NĐ 26/2026/NĐ-CP; TT 01/2026/TT-BCT."]],'Minor',
+    'Dán biển cảnh báo, hình đồ GHS và tên hóa chất trên bể, bồn, tủ, cửa kho.',
+    'Lập bảng nhận diện cho từng bể, bồn, tủ, kho (tên, hình đồ GHS, PPE, ứng phó sự cố, SDS); cập nhật khi đổi hóa chất.','Administrative','violation')
 ];
 (function dxAdd(){
   for(const r of DX_RULES){
@@ -85,9 +108,20 @@ Object.assign(QX_KW,{
   BT3:['bang tin|bang thong bao|niem yet','noi quy an toan|noi quy atvsld|noi quy ve sinh lao dong|so dien thoai khan cap|hotline khan cap|doi so cuu|doi ung cuu|doi pccc|so khan cap','thieu|khong co|chua niem yet|khong niem yet'],
   BT4:['bang tin|bang thong bao|niem yet|hom thu','phan anh|khieu nai|gop y|duong day nong|kenh bao cao','thieu|khong co|chua'],
   BT5:['bang tin|bang thong bao|tai lieu niem yet|thong bao niem yet','het hieu luc|qua han|rach|mo|bong|dan chong|che lap|bac mau|khong doc duoc|nam cu','!quan trac'],
-  BT6:['bang tin|bang thong bao|niem yet','chinh sach (an toan|moi truong|ehs|hse|atvsld|suc khoe)','thieu|khong co|chua niem yet|khong niem yet']
+  BT6:['bang tin|bang thong bao|niem yet','chinh sach (an toan|moi truong|ehs|hse|atvsld|suc khoe)','thieu|khong co|chua niem yet|khong niem yet'],
+  TR1:['tran nha|o tran|tam tran|tran thach cao|mai nha|mai ton|tren tran|la phong|tran|mai|ong nuoc|ong gio|ong ngung|dieu hoa','am moc|nam moc|moc|tham|dot|ro ri nuoc|ri nuoc|nho giot|vet nuoc|o vang|vet o','!hoa chat|dau|dung moi'],
+  TR2:['tran nha|o tran|tam tran|tran thach cao|mai nha|mai ton|la phong|ket cau tran|khung tran','bong troc|sut|vong|vo|roi|lo ho|mat tam|nut|long leo','!am moc|nam moc|tham|dot|ro ri nuoc'],
+  F14:['dau bao chay|dau bao khoi|dau bao nhiet|bao chay tu dong|cam bien chay|cam bien khoi|thiet bi bao chay|dau do khoi','thieu|khong co|chua lap|chua co|khong lap|chi con de|bi thao','!che|son|bao boc|boc|qua gan|nilon'],
+  F15:['phong no|chong chay no|chong no|explosion proof|ex proof|ex-proof','thieu|khong|chua|khong phai|thuong|dan dung'],
+  F16:['so do bo tri|layout|so do pccc|so do phuong tien|bien vi tri binh|bien chi dan binh|bien chi vi tri|tieu lenh|noi quy pccc|bien bao binh chua chay|bien binh chua chay','thieu|khong co|chua','!thoat hiem|thoat nan'],
+  H8:['hoa chat|dung moi|binh hoa chat|can hoa chat|chai hoa chat|phuy|kho con|chai con|binh con|can con|ethanol|ipa|xang|son','ngoai khu vuc|sai khu vuc|sai vi tri|khong dung khu vuc|khong dung noi|khong dung vi tri|de tren san|loi di|ban lam viec|chua bao quan dung|khong bao quan dung|de tuy tien|vuot luong|ngoai tu|ngoai kho','!nhan|ghs|khay|de lan|khong tuong thich'],
+  H9:['be hoa chat|bon hoa chat|bon chua|be chua|tu hoa chat|kho hoa chat|khu hoa chat|kho con|khu vuc luu tru hoa chat|kho dung moi','bien canh bao|hinh do|bang thong tin|sds|msds|bien bao|canh bao|bien nhan dien','thieu|khong co|chua','!tem nhan|nhan ghs|chua chay'],
+  /* mở rộng lỗi có sẵn */
+  TN2:['binh chua chay|binh cuu hoa|binh pccc|binh bot|binh co2','qua han|het han|tem|the|bao duong|phieu kiem tra|phieu|checklist|kiem dinh|nap sac|ngay kiem tra','qua han|het han|khong co|thieu|chua'],
+  TN3:['binh chua chay|binh cuu hoa|binh pccc|binh bot|binh co2','ap suat|dong ho|kim|vung do|hu hong|mop|gi set|vo|chot|voi|voi phun|loa phun|gioang|joan|ron|cao su|kep chi|niem phong','!qua han|het han|tem|phieu|checklist|kiem dinh'],
+  H2:['hoa chat|dung moi|chai|binh xit|can nhua|lo|binh|be|bon|phuy','nhan|ghs|tem nhan|hinh do|hinh canh bao|pictogram','khong co|thieu|mo|bong|khong doc|rach|chua','!chat thai|rac|qua han|het han|chua chay|cuu hoa|pccc']
 });
-for(const id of Object.keys(QX_KW))if(!QX_RX[id])QX_RX[id]=QX_KW[id].map(g=>{const neg=g[0]==='!';return{neg,rx:new RegExp('(?:^|[^a-z0-9])(?:'+(neg?g.slice(1):g)+')(?=$|[^a-z0-9])')}});
+for(const id of Object.keys(QX_KW))QX_RX[id]=QX_KW[id].map(g=>{const neg=g[0]==='!';return{neg,rx:new RegExp('(?:^|[^a-z0-9])(?:'+(neg?g.slice(1):g)+')(?=$|[^a-z0-9])')}});
 
 /* ---------- Danh sách kiểm tra chi tiết tủ điện ---------- */
 {const e=AREA_CK.find(a=>/^Tủ điện/.test(a.n));if(e)e.i=[
@@ -123,10 +157,36 @@ BẢNG TIN, BẢNG THÔNG BÁO (chỉ áp dụng khi ảnh có bảng tin)
   + Tài liệu hết hiệu lực, rách, mờ, dán chồng che nhau (BT5).
   + Chỉ nhắc vào "verify" (không có mã RBA tương ứng): nội quy lao động (Bộ luật Lao động 2019 Điều 118), thang lương bảng lương, định mức lao động, thỏa ước lao động tập thể, quy chế dân chủ cơ sở; bản tiếng nước ngoài khi có lao động nước ngoài.
 - Kết luận "thiếu" khi đọc được tiêu đề phần lớn tài liệu, các tài liệu không đọc được rõ ràng không phải mục đó (poster tuyển dụng, sơ đồ, khẩu hiệu), và không tài liệu nào là mục đó; nêu các tiêu đề đã đọc trong "evidence". Còn tài liệu dạng văn bản chưa đọc được tiêu đề: không kết luận, ghi vào "verify" (ví dụ "Kiểm tra bảng tin có kết quả quan trắc môi trường lao động năm gần nhất không").
-- Lỗi thiếu tài liệu niêm yết là lỗi nhìn thấy được trên bảng tin, không phải lỗi hồ sơ: "obj" là chính bảng tin, "box" bao cả bảng tin. Mỗi mục thiếu là một lỗi riêng. Mức độ Minor; Major khi đọc được kết quả quan trắc có vị trí vượt chuẩn mà không có biện pháp khắc phục.
+- Lỗi thiếu tài liệu niêm yết là lỗi nhìn thấy được trên bảng tin, không phải lỗi hồ sơ: "obj" là chính bảng tin, "box" bao cả bảng tin. Mỗi mục thiếu là một lỗi riêng. Đọc được kết quả quan trắc có vị trí vượt chuẩn mà không có biện pháp khắc phục: ghi rõ trong "evidence".
+
+`;
+const DX_SCENE=`KIỂM TRA THEO LOẠI ẢNH (xác định ảnh chụp gì rồi rà đúng nhóm; mục không nhìn thấy thì bỏ qua, không suy đoán)
+[Ảnh chụp trần nhà, mái, phần trên cao]
+- Ẩm mốc, vết ố vàng, thấm dột, nước nhỏ giọt từ trần, ống nước, ống gió, điều hòa (TR1). Nước rỉ ngay trên đèn, tủ điện, máng cáp, hàng hóa: ghi rõ trong "evidence" (nguy cơ chập điện, hư hàng) để người đánh giá cân nhắc nâng mức.
+- Tấm trần võng, sụt, vỡ, mất tấm, lớp vữa bong, vật treo lỏng có thể rơi (TR2).
+- Đầu báo cháy (khói, nhiệt): nhìn rõ phần lớn trần của phòng, kho mà không thấy đầu báo nào, hoặc chỉ còn đế (F14). Đầu báo bị che, sơn, bọc nilon; sprinkler bị chắn, hàng xếp sát (F10). Chỉ thấy một góc trần: không kết luận, ghi vào "verify".
+- Kho hóa chất, kho cồn, dung môi, sơn, xăng dầu, gas: đèn, quạt, công tắc, ổ cắm phải là loại phòng nổ (vỏ kim loại đúc kín, kính dày, có ký hiệu Ex); đèn tuýp, đèn LED dân dụng, quạt thường là lỗi (F15). Không biết kho chứa gì: ghi vào "verify".
+- Dây điện trên trần đi tự do, máng cáp hở nắp, mối nối băng keo (D11, D6).
+[Ảnh chụp cửa, lối ra vào, hành lang]
+- Đèn EXIT phía trên cửa thoát nạn và đèn chiếu sáng sự cố: thiếu, không sáng, bị che, chỉ sai hướng (F5).
+- Chiều mở cửa: cửa thoát nạn phải mở theo hướng thoát ra ngoài. Người chụp đứng phía trong nhìn ra mà thấy bản lề lộ, tay co thủy lực ở phía mình, tay nắm kéo, cửa mở về phía người chụp: mở ngược chiều (F3). Cửa cuốn, cửa trượt dùng làm lối thoát: F3. Không xác định được phía trong hay ngoài: ghi vào "verify".
+- Vật cản: hàng hóa, pallet, xe đẩy, thùng, bàn ghế chắn trước hoặc sau cửa, thu hẹp lối thoát (F1); cửa khóa, xích, chèn không mở được (F2).
+- Biển chỉ dẫn thoát nạn, sơ đồ thoát hiểm cạnh cửa (F7); cửa ngăn cháy bị chèn mở.
+[Ảnh chụp bình chữa cháy, tủ chữa cháy]
+- Tem kiểm định, tem bảo dưỡng: không có hoặc quá hạn (TN2; đọc ngày nếu rõ, không đọc được thì ghi vào "verify").
+- Phiếu (checklist) kiểm tra hằng tháng treo tại bình: không có (TN2); có nhưng bỏ trống các tháng gần đây (F13).
+- Vòi phun, loa phun, gioăng (joăng) cao su nứt, lão hóa, tuột, mất; mất chốt, kẹp chì; kim áp suất ngoài vùng xanh; vỏ gỉ, móp (TN3).
+- Bình bị che chắn, đặt trực tiếp xuống sàn, không có giá hoặc móc treo (F8).
+- Thiếu biển vị trí bình, tiêu lệnh, nội quy PCCC tại điểm đặt; khu vực không có sơ đồ (layout) bố trí phương tiện PCCC (F16).
+[Ảnh chụp bình, can, chai lọ, bể, bồn hóa chất]
+- Nhãn GHS trên từng bình, can, chai, bình chiết: không có, mờ, rách, thiếu tên hóa chất hoặc thiếu hình đồ cảnh báo (H2).
+- Bể, bồn, tủ, cửa kho hóa chất thiếu biển cảnh báo, hình đồ GHS, bảng thông tin hóa chất (H9).
+- Khay chống tràn: can, phuy, bình đặt thẳng xuống sàn; khay nhỏ hơn thùng lớn nhất; khay đầy chất lỏng (H1).
+- Để sai khu vực: trên sàn xưởng, lối đi, bàn làm việc, cạnh tủ điện, nguồn nhiệt, ngoài tủ hoặc kho quy định, vượt lượng dùng trong ca (H8); để lẫn loại kỵ nhau (H3).
+- Nắp mở, rò rỉ, tràn đổ (H4); quá hạn trên nhãn (TN8).
 
 `;
 {const _al=areaLists;areaLists=function(text){const s=_al(text),e=AREA_CK.find(a=>/^Tủ điện/.test(a.n));
   const el=e&&!s.includes(`[${e.n}]`)?`TỦ ĐIỆN, HỘP ĐIỆN, APTOMAT (chỉ áp dụng khi ảnh có tủ điện hoặc thiết bị điện)\n${e.i.map(x=>`- ${x}`).join('\n')}\n\n`:'';
-  return s+el+DX_BLK}}
+  return s+DX_SCENE+el+DX_BLK}}
 window.__DX={rules:DX_RULES.map(r=>r.id),blk:()=>DX_BLK};
